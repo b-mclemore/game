@@ -1,0 +1,11 @@
+roadmap
+
+[X] render a tick counter
+[X] render a room
+[X] render a character that can move
+[ ] render an enemy
+[ ] the enemy moves once every two ticks
+[ ] when the enemy reaches the character, transition to other screen
+[ ] fix resizing
+[ ] add second screen for text/menu
+[ ] create basic start screen with buttons for start (does nothing), debug, help, quit
