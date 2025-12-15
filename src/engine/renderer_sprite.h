@@ -23,9 +23,11 @@ public:
 	void drawTiledRect(const Texture2D& texture, Vector2 position,
 		Vector2 size, int tileSize, Color color = Color::white);
 
-private:
+protected:
 	Shader shader;
 	std::unique_ptr<VertexArray> vertexArray;
+
+private:
 };
 
 #endif

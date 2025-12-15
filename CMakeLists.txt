@@ -27,9 +27,6 @@ add_subdirectory( src/engine )
 add_subdirectory( src/game )
 
 # Executable and link
-if (NOT WIN32)
-    string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
-endif (NOT WIN32)
 add_executable(${PROJECT_NAME} src/main.cpp)
 target_link_libraries(${PROJECT_NAME} game engine ${SDL2_LIBRARIES} ${GLEW_LIBRARIES} OpenGL::GL)
 

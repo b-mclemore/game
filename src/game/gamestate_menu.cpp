@@ -1,11 +1,13 @@
 #include "gamestate_menu.h"
+#include "../engine/resource_manager.h"
 #include "gamestate_main.h"
 #include "../engine/log.h"
 
 GameStateMenu::GameStateMenu(
         std::shared_ptr<SpriteRenderer> _sRenderer,
-        std::shared_ptr<GeometryRenderer> _gRenderer
-) : sRenderer(std::move(_sRenderer)), gRenderer(std::move(_gRenderer)) {
+        std::shared_ptr<GeometryRenderer> _gRenderer,
+        std::shared_ptr<TextRenderer> _tRenderer
+) : sRenderer(std::move(_sRenderer)), gRenderer(std::move(_gRenderer)), tRenderer(std::move(_tRenderer)) {
 }
 
 GameStateMenu::~GameStateMenu() {
@@ -19,6 +21,7 @@ void GameStateMenu::load() {
     screenWidth = game->windowWidth;
     screenHeight = game->windowHeight;
     selectedOption = MenuOptions::start;
+    fontTexture = ResourceManager::loadTexture("./assets/textures/font_atlas.png", "font_atlas");
 }
 
 void GameStateMenu::clean() {
@@ -66,14 +69,14 @@ void GameStateMenu::draw() {
     int quitY = screenHeight / 2 - 50;
 
     if (selectedOption == MenuOptions::start) {
-        gRenderer->drawRect(Vector2(screenWidth/2 - 100, startY), Vector2(200, 40), 0.0f, selectedColor);
+        tRenderer->drawText(fontTexture, "start", Vector2(screenWidth/2 - 100, startY), selectedColor);
     } else {
-        gRenderer->drawRect(Vector2(screenWidth/2 - 100, startY), Vector2(200, 40), 0.0f, normalColor);
+        tRenderer->drawText(fontTexture, "start", Vector2(screenWidth/2 - 100, startY), normalColor);
     }
 
     if (selectedOption == MenuOptions::quit) {
-        gRenderer->drawRect(Vector2(screenWidth/2 - 100, quitY), Vector2(200, 40), 0.0f, selectedColor);
+        tRenderer->drawText(fontTexture, "quit", Vector2(screenWidth/2 - 100, quitY), selectedColor);
     } else {
-        gRenderer->drawRect(Vector2(screenWidth/2 - 100, quitY), Vector2(200, 40), 0.0f, normalColor);
+        tRenderer->drawText(fontTexture, "quit", Vector2(screenWidth/2 - 100, quitY), normalColor);
     }
 }

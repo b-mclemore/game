@@ -10,7 +10,8 @@ class GameStateMenu : public GameState {
 public:
     GameStateMenu(
             std::shared_ptr<SpriteRenderer>,
-            std::shared_ptr<GeometryRenderer>
+            std::shared_ptr<GeometryRenderer>,
+            std::shared_ptr<TextRenderer>
     );
 
     ~GameStateMenu() override;
@@ -36,6 +37,9 @@ public:
 private:
     std::shared_ptr<SpriteRenderer> sRenderer;
     std::shared_ptr<GeometryRenderer> gRenderer;
+    std::shared_ptr<TextRenderer> tRenderer;
+
+    Texture2D fontTexture;
 
     Game* game { nullptr };
     int screenWidth { 0 };
