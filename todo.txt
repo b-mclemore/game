@@ -3,15 +3,18 @@ roadmap
 [X] render a tick counter
 [X] render a room
 [X] render a character that can move
-[ ] render start screen w/ fonts
-[ ] add second screen for text/menu
+[X] render start screen w/ fonts
+[ ] refactor code (src/include, split up gamestates)
+[ ] add second screen for text/menu (GameStateMain holds GameStateVisual and GameStateTextual)
+    text can be static for now
+
 [ ] render an enemy
 [ ] the enemy moves once every two ticks
-[ ] when the enemy reaches the character, transition to other screen
+[ ] on tab, pause GameStateVisual and move to text
+[ ] when paused, text entry is enabled
+[ ] when the enemy reaches the character, transition to new GameStateVisual
 [ ] fix resizing
-[ ] actual start menu
-[ ] chess game
-[ ] transition between GameState (game modules)
+[ ] visual transition between GameState (game modules)
 
 screen should be split always
 left screen is game, right is "console" (text)

@@ -2,10 +2,9 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 
-#include "stb_image.h"
-
-#include "texture.h"
-#include "log.h"
+#include <engine/stb_image.h>
+#include <engine/texture.h>
+#include <engine/log.h>
 
 Texture2D::Texture2D() {
     glGenTextures(1, &id);

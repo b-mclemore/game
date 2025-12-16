@@ -1,6 +1,4 @@
-#include "engine.h"
-#include "engine.h"
-
+#include <engine/engine.h>
 Engine::Engine(std::unique_ptr<IGame>&& _game, std::string _title, int _screenWidth, int _screenHeight) :
         game(std::move(_game)),
         title(std::move(_title)),

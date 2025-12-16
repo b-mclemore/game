@@ -4,7 +4,7 @@
 #include "../engine/gamestate.h"
 #include "game.h"
 
-enum MenuOptions {start, quit};
+enum MenuOptions {start, help, settings, quit};
 
 class GameStateMenu : public GameState {
 public:

@@ -1,7 +1,7 @@
-#include "gamestate_main.h"
-#include "../engine/resource_manager.h"
-#include "game.h"
-#include "../engine/log.h"
+#include <game/gamestate_main.h>
+#include <engine/resource_manager.h>
+#include <game/game.h>
+#include <engine/log.h>
 
 GameStateMain::GameStateMain(
         std::shared_ptr<SpriteRenderer> _sRenderer,

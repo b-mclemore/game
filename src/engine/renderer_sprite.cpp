@@ -1,4 +1,4 @@
-#include "renderer_sprite.h"
+#include <engine/renderer_sprite.h>
 
 static std::array<GLfloat, 18> vertexBuffer = {
         -0.5f, -0.5f, 0.0f,

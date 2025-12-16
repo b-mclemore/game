@@ -1,5 +1,5 @@
-#include "resource_manager.h"
-#include "log.h"
+#include <engine/resource_manager.h>
+#include <engine/log.h>
 
 #include <iostream>
 #include <sstream>

@@ -1,7 +1,6 @@
-#include "window_sdl.h"
-
+#include <engine/window_sdl.h>
 #include <utility>
-#include "gl_debug.hpp"
+#include <engine/gl_debug.hpp>
 
 WindowSdl::WindowSdl(std::string title) : title(std::move(title)) {
 }

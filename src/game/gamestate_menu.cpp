@@ -1,7 +1,7 @@
-#include "gamestate_menu.h"
-#include "../engine/resource_manager.h"
-#include "gamestate_main.h"
-#include "../engine/log.h"
+#include <game/gamestate_menu.h>
+#include <engine/resource_manager.h>
+#include <game/gamestate_main.h>
+#include <engine/log.h>
 
 GameStateMenu::GameStateMenu(
         std::shared_ptr<SpriteRenderer> _sRenderer,
@@ -35,23 +35,25 @@ void GameStateMenu::resume() {
 }
 
 void GameStateMenu::handleEvent(const InputState& inputState) {
-    // Navigate menu with W/S or Up/Down
+    // Navigate menu
     if (inputState.keyboardState.isJustPressed(SDL_SCANCODE_W) ||
         inputState.keyboardState.isJustPressed(SDL_SCANCODE_UP)) {
-        selectedOption = MenuOptions::start;
+        selectedOption = (MenuOptions)((selectedOption + 3) % 4);
     }
 
     if (inputState.keyboardState.isJustPressed(SDL_SCANCODE_S) ||
         inputState.keyboardState.isJustPressed(SDL_SCANCODE_DOWN)) {
-        selectedOption = MenuOptions::quit;
+        selectedOption = (MenuOptions)((selectedOption + 1) % 4);
     }
 
     // Confirm with Enter
     if (inputState.keyboardState.isJustPressed(SDL_SCANCODE_RETURN)) {
-        if (selectedOption == MenuOptions::start) {
-            game->changeState(std::make_unique<GameStateMain>(sRenderer, gRenderer));
-        } else {
-            game->gameIsRunning = false;
+        switch (selectedOption) {
+            case MenuOptions::start:
+                game->changeState(std::make_unique<GameStateMain>(sRenderer, gRenderer));
+                break;
+            default:
+                game->gameIsRunning = false;
         }
     }
 }
@@ -66,18 +68,32 @@ void GameStateMenu::draw() {
     Color selectedColor = Color(255, 255, 0, 255);  // yellow
     Color normalColor = Color(64, 64, 0, 255);  // darker yellow
 
-    int startY = screenHeight / 2 + 50;
-    int quitY = screenHeight / 2 - 50;
-
-    if (selectedOption == MenuOptions::start) {
-        tRenderer->drawText(fontTexture, "start", Vector2(screenWidth/2 - 100, startY), selectedColor);
-    } else {
-        tRenderer->drawText(fontTexture, "start", Vector2(screenWidth/2 - 100, startY), normalColor);
+    Color startColor = normalColor;
+    Color helpColor = normalColor;
+    Color settingsColor = normalColor;
+    Color quitColor = normalColor;
+    switch (selectedOption) {
+        case MenuOptions::start:
+            startColor = selectedColor;
+            break;
+        case MenuOptions::help:
+            helpColor = selectedColor;
+            break;
+        case MenuOptions::settings:
+            settingsColor = selectedColor;
+            break;
+        case MenuOptions::quit:
+            quitColor = selectedColor;
+            break;
     }
 
-    if (selectedOption == MenuOptions::quit) {
-        tRenderer->drawText(fontTexture, "quit", Vector2(screenWidth/2 - 100, quitY), selectedColor);
-    } else {
-        tRenderer->drawText(fontTexture, "quit", Vector2(screenWidth/2 - 100, quitY), normalColor);
-    }
+    int startY = screenHeight / 2 + 150;
+    int helpY = screenHeight / 2 + 50;
+    int settingsY = screenHeight / 2 - 50;
+    int quitY = screenHeight / 2 - 150;
+
+    tRenderer->drawText(fontTexture, "start", Vector2(screenWidth/2 - 100, startY), startColor);
+    tRenderer->drawText(fontTexture, "help", Vector2(screenWidth/2 - 100, helpY), helpColor);
+    tRenderer->drawText(fontTexture, "settings", Vector2(screenWidth/2 - 100, settingsY), settingsColor);
+    tRenderer->drawText(fontTexture, "quit", Vector2(screenWidth/2 - 100, quitY), quitColor);
 }

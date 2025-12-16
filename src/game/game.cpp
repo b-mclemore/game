@@ -1,8 +1,8 @@
-#include "game.h"
-#include "../engine/resource_manager.h"
-#include "../engine/gamestate.h"
-#include "gamestate_main.h"
-#include "gamestate_menu.h"
+#include <game/game.h>
+#include <engine/resource_manager.h>
+#include <engine/gamestate.h>
+#include <game/gamestate_main.h>
+#include <game/gamestate_menu.h>
 
 void Game::init(int screenWidth, int screenHeight) {
     windowWidth = screenWidth;
