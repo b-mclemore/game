@@ -15,10 +15,16 @@
 class TextRenderer : public SpriteRenderer
 {
 public:
-    int glyphWidth = 32;
-    int glyphHeight = 32;
+    // Atlas properties (size of glyphs IN the texture)
+    int atlasGlyphWidth = 8;
+    int atlasGlyphHeight = 8;
     int rows = 16;
     int cols = 16;
+
+    // Render properties (size to display on screen)
+    int renderGlyphWidth = 32;
+    int renderGlyphHeight = 32;
+
     explicit TextRenderer(const Shader& shader) : SpriteRenderer(shader) {};
     
     void drawText(const Texture2D& texture,

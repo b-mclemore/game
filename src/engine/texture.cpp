@@ -65,6 +65,15 @@ void Texture2D::setActive() const {
     glBindTexture(GL_TEXTURE_2D, id);
 }
 
+void Texture2D::setFiltering(GLint minFilter, GLint magFilter) {
+    filterMin = minFilter;
+    filterMax = magFilter;
+    glBindTexture(GL_TEXTURE_2D, id);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterMin);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterMax);
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 //void Texture2D::generate(std::unique_ptr<SDL_Surface, SdlSurfaceDestroyer> &surface)
 /*void Texture2D::generate(SDL_Surface *surface)
 {

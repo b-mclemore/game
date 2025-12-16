@@ -22,6 +22,7 @@ void GameStateMenu::load() {
     screenHeight = game->windowHeight;
     selectedOption = MenuOptions::start;
     fontTexture = ResourceManager::loadTexture("./assets/textures/font_atlas.png", "font_atlas");
+    fontTexture.setFiltering(GL_NEAREST, GL_NEAREST);
 }
 
 void GameStateMenu::clean() {
@@ -62,8 +63,8 @@ void GameStateMenu::update(unsigned int dt) {
 void GameStateMenu::draw() {
     // Colors for menu items
     // (Using rectangles as placeholders)
-    Color selectedColor = Color(255, 255, 0, 255);  // Yellow bar
-    Color normalColor = Color(0, 0, 0, 255);  // Black
+    Color selectedColor = Color(255, 255, 0, 255);  // yellow
+    Color normalColor = Color(64, 64, 0, 255);  // darker yellow
 
     int startY = screenHeight / 2 + 50;
     int quitY = screenHeight / 2 - 50;

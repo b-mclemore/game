@@ -1,5 +1,16 @@
 #include "renderer_text.h"
 #include "../engine/log.h"
+#include <map>
+
+std::map<char, char> charMap = {
+    { 'a', 10 * 16 + 1 },
+    { 'i', 10 * 16 + 9 },
+    { 'q', 9 * 16 + 1 },
+    { 'r', 9 * 16 + 2 },
+    { 's', 9 * 16 + 3 },
+    { 't', 9 * 16 + 4 },
+    { 'u', 9 * 16 + 5 }
+};
 
 void TextRenderer::drawSpriteNoBinding(const Texture2D& texture, Vector2 position,
     Vector2 size, GLfloat rotate, Color color) {
@@ -30,25 +41,30 @@ void TextRenderer::drawText(const Texture2D& texture, const std::string& text, V
     float x = position.x;
 
     for (char c : text) {
-        int index = static_cast<unsigned char>(c);
+        auto idx = charMap.find(static_cast<unsigned char>(c));
+        int index;
+        if (idx == charMap.end()) index = 15 * 16 + 1; // exclam
+        else index = charMap[c];
         int col = index % cols;
         int row = index / cols;
 
-        float u0 = (col * glyphWidth) / (float)texture.width;
-        float v0 = (row * glyphHeight) / (float)texture.height;
-        float u1 = u0 + glyphWidth / (float)texture.width;
-        float v1 = v0 + glyphHeight / (float)texture.height;
+        // Use atlas dimensions for UV calculation
+        float u0 = (col * atlasGlyphWidth) / (float)texture.width;
+        float v0 = (row * atlasGlyphHeight) / (float)texture.height;
+        float u1 = u0 + atlasGlyphWidth / (float)texture.width;
+        float v1 = v0 + atlasGlyphHeight / (float)texture.height;
 
         shader.setVector4f("uvRect", Vector4(u0, v0, u1, v1));
 
+        // Use render dimensions for display size
         drawSpriteNoBinding(
             texture,
             Vector2(x, position.y),
-            Vector2(glyphWidth, glyphHeight),
+            Vector2(renderGlyphWidth, renderGlyphHeight),
             0.0f,
             color
         );
 
-        x += glyphWidth;
+        x += renderGlyphWidth;
     }
 }

@@ -16,7 +16,7 @@ void Game::load() {
     // Load shaders
     ResourceManager::loadShader("assets/shaders/sprite.vert", "assets/shaders/sprite.frag", "", "sprite");
     ResourceManager::loadShader("assets/shaders/rect.vert", "assets/shaders/rect.frag", "", "rect");
-    ResourceManager::loadShader("assets/shaders/font.vert", "assets/shaders/font.frag", "", "font");
+    ResourceManager::loadShader("assets/shaders/text.vert", "assets/shaders/text.frag", "", "text");
     // Compute projection matrix
     auto fWindowWidth = static_cast<float>(windowWidth);
     auto fWindowHeight = static_cast<float>(windowHeight);
@@ -28,12 +28,12 @@ void Game::load() {
     ResourceManager::getShader("sprite").setMatrix4("projection", finalProjection);
     ResourceManager::getShader("rect").use();
     ResourceManager::getShader("rect").setMatrix4("projection", finalProjection);
-    ResourceManager::getShader("font").use();
-    ResourceManager::getShader("font").setMatrix4("projection", finalProjection);
+    ResourceManager::getShader("text").use();
+    ResourceManager::getShader("text").setMatrix4("projection", finalProjection);
     // Set render-specific controls
     sRenderer = std::make_shared<SpriteRenderer>(ResourceManager::getShader("sprite"));
     gRenderer = std::make_shared<GeometryRenderer>(ResourceManager::getShader("rect"));
-    tRenderer = std::make_shared<TextRenderer>(ResourceManager::getShader("font"));
+    tRenderer = std::make_shared<TextRenderer>(ResourceManager::getShader("text"));
 
     // Game state - Start with menu
     changeState(std::make_unique<GameStateMenu>(sRenderer, gRenderer, tRenderer));
@@ -133,4 +133,6 @@ void Game::updateProjectionMatrix() {
     ResourceManager::getShader("sprite").setMatrix4("projection", finalProjection);
     ResourceManager::getShader("rect").use();
     ResourceManager::getShader("rect").setMatrix4("projection", finalProjection);
+    ResourceManager::getShader("text").use();
+    ResourceManager::getShader("text").setMatrix4("projection", finalProjection);
 }

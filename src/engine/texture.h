@@ -59,6 +59,9 @@ public:
 
     // Binds the texture as the current active GL_TEXTURE_2D texture object
     void setActive() const;
+
+    // Set texture filtering mode
+    void setFiltering(GLint minFilter, GLint magFilter);
 };
 
 #endif
