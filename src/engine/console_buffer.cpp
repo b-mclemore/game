@@ -17,6 +17,13 @@ void ConsoleBuffer::addChar(char c) {
     line_buff[active_line][char_idx++] = c;
 }
 
+void ConsoleBuffer::addLine(const std::string& s) {
+    for (int i = 0; i < width && i < s.length(); i++) {
+        line_buff[active_line][i] = s[i];
+    }
+    nextLine();
+}
+
 void ConsoleBuffer::nextLine() {
     active_line = (active_line + 1) % height;
     char_idx = 0;

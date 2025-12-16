@@ -11,6 +11,7 @@ public:
     void nextLine(); // just progresses the active_line
     std::string getActiveLine();
     std::vector<std::string> getAllLines();
+    void addLine(const std::string& s);
 
 private:
     int width;

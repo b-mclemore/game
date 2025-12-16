@@ -9,8 +9,9 @@ roadmap
 [X] add second screen for text/menu (GameStateMain holds GameStateVisual and GameStateTextual)
     text can be static for now
 [X] on tab, pause GameStateVisual and move to text
-[ ] when paused, text entry is enabled
-[ ] console typing rendering, handle "quit" or "q" to quit. toLowerCase everything.
+[X] when paused, text entry is enabled
+[X] console typing rendering, handle "quit" or "q" to quit. toLowerCase everything.
+[ ] reset line when buffer circles
 
 [ ] render an enemy
 [ ] the enemy moves once every two ticks

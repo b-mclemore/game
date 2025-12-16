@@ -28,7 +28,7 @@ void GameStateTextual::load() {
     screenWidth = game->windowWidth / 2;
     screenHeight = game->windowHeight;
     offset = game->windowWidth / 2;
-    cbuff = new ConsoleBuffer(screenWidth / GRID_SIZE - 2, screenHeight / GRID_SIZE, GRID_SIZE);
+    cbuff = new ConsoleBuffer(screenWidth / GRID_SIZE - 2, screenHeight / (GRID_SIZE + vSpacing), GRID_SIZE);
     fontTexture = ResourceManager::loadTexture("./assets/textures/font_atlas.png", "font_atlas");
     fontTexture.setFiltering(GL_NEAREST, GL_NEAREST);
 }
@@ -49,8 +49,8 @@ void GameStateTextual::resume() {
 void GameStateTextual::handleEvent(const InputState& inputState) {
     if (inputState.keyboardState.isJustPressed(SDL_SCANCODE_RETURN)) {
         std::string currLine = cbuff->getActiveLine();
-        handleCommand(currLine);
         cbuff->nextLine();
+        handleCommand(currLine);
     } else {
         for (int sc = 4; sc < 29; sc++) {
             if (inputState.keyboardState.isJustPressed((SDL_Scancode)sc)) {
@@ -72,9 +72,9 @@ void GameStateTextual::drawText() {
     int lineNum = 0;
     for (auto l : lines) {
         if (lineNum == 0)
-            tRenderer->drawText(fontTexture, " >"+l, Vector2(offset, lineNum * GRID_SIZE), consoleColor);
+            tRenderer->drawText(fontTexture, " >"+l, Vector2(offset, 0), consoleColor);
         else
-            tRenderer->drawText(fontTexture, "  "+l, Vector2(offset, lineNum * GRID_SIZE), textColor);
+            tRenderer->drawText(fontTexture, "  "+l, Vector2(offset, lineNum * (GRID_SIZE + vSpacing)), textColor);
         lineNum += 1;
     }
 }
@@ -100,5 +100,11 @@ void GameStateTextual::handleCommand(const std::string& command) {
     auto c = cleanUpCommand(command);
     if (c == "quit" || c == "q") {
         game->gameIsRunning = false;
+    } 
+    else if (c == "help" || c == "h") {
+        cbuff->addLine("Press tab to switch.");
+        cbuff->addLine("Use WASD to move.");
+        cbuff->addLine("Enter 'h' for help.");
+        cbuff->addLine("Enter 'q' to quit.");
     }
 }

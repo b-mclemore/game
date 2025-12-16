@@ -48,6 +48,7 @@ private:
     Game* game { nullptr };
     int screenWidth { 0 };
     int screenHeight { 0 };
+    int vSpacing { 4 };
     int offset { 0 };
 
     static constexpr int GRID_SIZE = 32;  // Size of each grid cell in pixels
