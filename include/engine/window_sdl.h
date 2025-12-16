@@ -41,6 +41,9 @@ public:
 
     bool init(int xPos, int yPos, int width, int height, bool isFullscreen) override;
 
+    void getWindowSize(int& w, int& h) const override;
+    void getDrawableSize(int& w, int& h) const override;
+
     void logGlParams() override;
 
     void updateFpsCounter(uint32_t dt) override;

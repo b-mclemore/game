@@ -12,6 +12,9 @@ public:
 
     virtual bool init(int xPos, int yPos, int width, int height, bool isFullscreen) = 0;
 
+    virtual void getWindowSize(int& width, int& height) const = 0;
+    virtual void getDrawableSize(int& width, int& height) const = 0;
+
     virtual void logGlParams() = 0;
 
     virtual void updateFpsCounter(uint32_t dt) = 0;

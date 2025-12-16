@@ -21,8 +21,8 @@ private:
     uint32_t dt;
 
     std::string title;
-    const int screenWidth = 800;
-    const int screenHeight = 800;
+    int screenWidth = 800;
+    int screenHeight = 800;
     std::unique_ptr<IWindow> window { nullptr };
     std::unique_ptr<IGame> game;
     Timer timer;

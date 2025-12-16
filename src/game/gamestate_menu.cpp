@@ -50,7 +50,7 @@ void GameStateMenu::handleEvent(const InputState& inputState) {
     if (inputState.keyboardState.isJustPressed(SDL_SCANCODE_RETURN)) {
         switch (selectedOption) {
             case MenuOptions::start:
-                game->changeState(std::make_unique<GameStateMain>(sRenderer, gRenderer));
+                game->changeState(std::make_unique<GameStateMain>(sRenderer, gRenderer, tRenderer));
                 break;
             default:
                 game->gameIsRunning = false;

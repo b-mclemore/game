@@ -1,25 +1,23 @@
-#ifndef GAMESTATE_MAIN_H
-#define GAMESTATE_MAIN_H
+#ifndef GAMESTATE_TEXTUAL_H
+#define GAMESTATE_TEXTUAL_H
 
-#include "../engine/gamestate.h"
+#include <engine/gamestate.h>
 #include "game.h"
-#include "tilemap.h"
-#include <game/gamestate_textual.h>
-#include <game/gamestate_visual.h>
 
-// Main scene of the game, essentially a wrapper for the 
-// left/right Visual/Textual gamestates
-class GameStateMain : public GameState {
+// right side of screen, text
+
+// Textual scene of the game, contains "console"
+class GameStateTextual : public GameState {
 public:
-    GameStateMain(
+    GameStateTextual(
             std::shared_ptr<SpriteRenderer>,
             std::shared_ptr<GeometryRenderer>,
             std::shared_ptr<TextRenderer>
     );
 
-    ~GameStateMain() override;
+    ~GameStateTextual() override;
 
-    GameStateMain() = delete;
+    GameStateTextual() = delete;
 
     void load() override;
 
@@ -43,17 +41,17 @@ private:
     std::shared_ptr<SpriteRenderer> sRenderer;
     std::shared_ptr<GeometryRenderer> gRenderer;
     std::shared_ptr<TextRenderer> tRenderer;
+    
+    Texture2D fontTexture;
 
     Game* game { nullptr };
     int screenWidth { 0 };
     int screenHeight { 0 };
+    int offset { 0 };
 
-    // Grid settings
     static constexpr int GRID_SIZE = 32;  // Size of each grid cell in pixels
 
-    GameStateVisual *vis;
-    GameStateTextual *txt;
-    bool isVisToggled = true; // toggle between vis and text
+    void drawText();
 };
 
 #endif

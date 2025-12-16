@@ -13,7 +13,7 @@ WindowSdl::~WindowSdl() {
 bool WindowSdl::init(int xPos, int yPos, int width, int height, bool isFullscreen) {
     int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
     if (isFullscreen) {
-        flags = SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL;
+        flags = SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_OPENGL;
     }
 
     if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
@@ -48,9 +48,9 @@ bool WindowSdl::init(int xPos, int yPos, int width, int height, bool isFullscree
         GLenum initGLEW(glewInit());
         if (initGLEW == GLEW_OK) {
             LOG(Info) << "GLEW initialised";
-        } else
-            return false;
-
+        } else {
+            LOG(Warning) << "GLEW failed to initialized. Proceeding anyways...";
+        }
 
         // Get graphics info
         const GLubyte* renderer = glGetString(GL_RENDERER);
@@ -169,4 +169,12 @@ void WindowSdl::clean() {
 
 std::unique_ptr<IWindow> IWindow::create(const std::string& title) {
     return std::make_unique<WindowSdl>(title);
+}
+
+void WindowSdl::getWindowSize(int& w, int& h) const {
+    SDL_GetWindowSize(window.get(), &w, &h);
+}
+
+void WindowSdl::getDrawableSize(int& w, int& h) const {
+    SDL_GL_GetDrawableSize(window.get(), &w, &h);
 }

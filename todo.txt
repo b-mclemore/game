@@ -4,16 +4,17 @@ roadmap
 [X] render a room
 [X] render a character that can move
 [X] render start screen w/ fonts
-[ ] refactor code (src/include, split up gamestates)
-[ ] add second screen for text/menu (GameStateMain holds GameStateVisual and GameStateTextual)
+[X] refactor code (src/include, split up gamestates)
+[X] fix resizing
+[X] add second screen for text/menu (GameStateMain holds GameStateVisual and GameStateTextual)
     text can be static for now
+[X] on tab, pause GameStateVisual and move to text
+[ ] when paused, text entry is enabled
+[ ] console typing rendering, handle "quit" or "q" to quit. toLowerCase everything.
 
 [ ] render an enemy
 [ ] the enemy moves once every two ticks
-[ ] on tab, pause GameStateVisual and move to text
-[ ] when paused, text entry is enabled
 [ ] when the enemy reaches the character, transition to new GameStateVisual
-[ ] fix resizing
 [ ] visual transition between GameState (game modules)
 
 screen should be split always
@@ -21,7 +22,12 @@ left screen is game, right is "console" (text)
 tab between screens, pauses left on tab
 GameState classes for each game/minigame/etc
 
-font steps
-1. create font atlas (use 16x16 ascii for initial)
-2. create font struct (texture, width, height)
-3. take text and call drawSprite on each character
+ideas
+- almanac of allimac
+- sot-weed almanac
+- pocket platonic solid monsters, team pathological, Vienna
+- organ grinder
+misc
+- ch. puzzles
+- mystery solver
+- RPN (not that one)
