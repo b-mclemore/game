@@ -2,6 +2,7 @@
 #define GAMESTATE_TEXTUAL_H
 
 #include <engine/gamestate.h>
+#include <engine/console_buffer.h>
 #include "game.h"
 
 // right side of screen, text
@@ -51,7 +52,16 @@ private:
 
     static constexpr int GRID_SIZE = 32;  // Size of each grid cell in pixels
 
+    // buffer for text rendering
+    ConsoleBuffer *cbuff;
+
+    Color consoleColor;
+    Color textColor;
+
     void drawText();
+    // wrapper for whatever controller class we want to create later.
+    // for now it just quits out.
+    void handleCommand(const std::string& command);
 };
 
 #endif

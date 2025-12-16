@@ -51,9 +51,6 @@ void GameStateVisual::load() {
             // Wall border cobble
             else if (x == wallMin || x == wallMax || y == wallMin || y == wallMax) {
                 tileMap->setTile(x, y, TileType::COBBLE);
-            // wall test
-            } else if (x == 7 && y < 15) {
-                tileMap->setTile(x, y, TileType::COBBLE);
             }
             // Interior dirt
             else {

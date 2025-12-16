@@ -3,11 +3,18 @@
 #include <game/game.h>
 #include <engine/log.h>
 
+Color activeTextColor = Color(128, 128, 32, 255);
+Color inactiveTextColor = Color(64, 64, 32, 255);
+Color activeConsoleColor = Color(32, 196, 32, 255);
+Color inactiveConsoleColor = Color(32, 96, 32, 255);
+
 GameStateTextual::GameStateTextual(
         std::shared_ptr<SpriteRenderer> _sRenderer,
         std::shared_ptr<GeometryRenderer> _gRenderer,
         std::shared_ptr<TextRenderer> _tRenderer
 ) : sRenderer(std::move(_sRenderer)), gRenderer(std::move(_gRenderer)), tRenderer(std::move(_tRenderer)) {
+    consoleColor = inactiveConsoleColor;
+    textColor = inactiveTextColor;
 }
 
 GameStateTextual::~GameStateTextual() {
@@ -21,6 +28,7 @@ void GameStateTextual::load() {
     screenWidth = game->windowWidth / 2;
     screenHeight = game->windowHeight;
     offset = game->windowWidth / 2;
+    cbuff = new ConsoleBuffer(screenWidth / GRID_SIZE - 2, screenHeight / GRID_SIZE, GRID_SIZE);
     fontTexture = ResourceManager::loadTexture("./assets/textures/font_atlas.png", "font_atlas");
     fontTexture.setFiltering(GL_NEAREST, GL_NEAREST);
 }
@@ -29,14 +37,26 @@ void GameStateTextual::clean() {
 }
 
 void GameStateTextual::pause() {
+    textColor = inactiveTextColor;
+    consoleColor = inactiveConsoleColor;
 }
 
 void GameStateTextual::resume() {
+    textColor = activeTextColor;
+    consoleColor = activeConsoleColor;
 }
 
 void GameStateTextual::handleEvent(const InputState& inputState) {
     if (inputState.keyboardState.isJustPressed(SDL_SCANCODE_RETURN)) {
-        game->gameIsRunning = false;
+        std::string currLine = cbuff->getActiveLine();
+        handleCommand(currLine);
+        cbuff->nextLine();
+    } else {
+        for (int sc = 4; sc < 29; sc++) {
+            if (inputState.keyboardState.isJustPressed((SDL_Scancode)sc)) {
+                cbuff->addChar((char)(sc + 93));
+            }
+        }
     }
 }
 
@@ -48,16 +68,37 @@ void GameStateTextual::draw() {
 }
 
 void GameStateTextual::drawText() {
-    // @TODO colors for console/text items should be stored in the class
-    Color consoleColor = Color(32, 196, 32, 255);
-
-    int startX = screenWidth/2 + offset - 32 * 9;
-    int startY = screenHeight / 2;
-
-    tRenderer->drawText(fontTexture, "tab+enter to quit", Vector2(startX, startY), consoleColor);
+    std::vector<std::string> lines = cbuff->getAllLines();
+    int lineNum = 0;
+    for (auto l : lines) {
+        if (lineNum == 0)
+            tRenderer->drawText(fontTexture, " >"+l, Vector2(offset, lineNum * GRID_SIZE), consoleColor);
+        else
+            tRenderer->drawText(fontTexture, "  "+l, Vector2(offset, lineNum * GRID_SIZE), textColor);
+        lineNum += 1;
+    }
 }
 
 void GameStateTextual::onResize(int newWidth, int newHeight) {
     screenWidth = newWidth;
     screenHeight = newHeight;
+    offset = newWidth / 2;
+    LOG(Error) << "Console cannot handle resizing yet";
+    exit(1);
+}
+
+std::string cleanUpCommand(const std::string& command) {
+    // strip leading/trailing whitespace from command
+    size_t first = command.find_first_not_of(" \t\n\r\f\v");
+    if (first == std::string::npos)
+        return ""; // string is all whitespace
+    size_t last = command.find_last_not_of(" \t\n\r\f\v");
+    return command.substr(first, last - first + 1);
+}
+
+void GameStateTextual::handleCommand(const std::string& command) {
+    auto c = cleanUpCommand(command);
+    if (c == "quit" || c == "q") {
+        game->gameIsRunning = false;
+    }
 }

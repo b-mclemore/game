@@ -47,6 +47,11 @@ void GameStateMain::handleEvent(const InputState& inputState) {
     // toggle if tab is pressed, otherwise pass handling to toggled state
     if (inputState.keyboardState.isJustPressed(SDL_Scancode(SDL_SCANCODE_TAB))) {
         isVisToggled = !isVisToggled;
+        if (isVisToggled) {
+            txt->pause();
+        } else {
+            txt->resume();
+        }
     }
     else if (isVisToggled) {
         vis->handleEvent(inputState);
