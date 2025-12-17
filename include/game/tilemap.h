@@ -2,6 +2,7 @@
 #define TILEMAP_H
 
 #include <vector>
+#include <string>
 
 enum class TileType {
     EMPTY = 0,
@@ -21,6 +22,8 @@ public:
 
     int getWidth() const { return width; }
     int getHeight() const { return height; }
+
+    void loadTileMap(const std::string& file);
 
 private:
     int width;

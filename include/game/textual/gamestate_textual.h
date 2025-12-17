@@ -59,10 +59,7 @@ private:
     // buffer for text rendering
     ConsoleBuffer *cbuff;
 
-    Color consoleColor;
-    Color textColor;
-    Color genericColor;
-    Color npcColor;
+    bool is_active = true;
 
     void drawText();
     // wrapper for whatever controller class we want to create later.

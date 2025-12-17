@@ -5,9 +5,10 @@
 #include <memory>
 
 enum sourceEnum {
-    genericSource,
-    playerSource,
-    npcSource
+    genericSource, // text from the Textual side (e.g. help)
+    playerSource,  // old text from the player, previously typed
+    npcSource,     // text from the Visual game
+    consoleSource, // the text currently being typed
 };
 
 class ConsoleBuffer {

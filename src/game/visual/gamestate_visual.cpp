@@ -34,34 +34,14 @@ void GameStateVisual::load() {
     ResourceManager::loadTexture("./assets/textures/empty.png", "empty");
 
     // Create map
-    tileMap = std::make_unique<TileMap>(30, 30);
+    tileMap = std::make_unique<TileMap>(screenWidth / GRID_SIZE, screenHeight / GRID_SIZE);
+    tileMap->loadTileMap("assets/maps/bigmap.txt");
+
+    // Load npcs
+    tileMap->setTile(7, 7, TileType::NPC);
 
     // Calculate border positions
     int centerTile = 15;
-    // int wallDistance = 13;
-    int wallMin = 0;
-    int wallMax = 28;
-
-    // Initialize map layout
-    for (int y = 0; y < wallMax; y++) {
-        for (int x = 0; x < wallMax; x++) {
-            // Outside wall empty
-            if (x < wallMin || x > wallMax || y < wallMin || y > wallMax) {
-                tileMap->setTile(x, y, TileType::EMPTY);
-            }
-            // Wall border cobble
-            else if (x == wallMin || x == wallMax || y == wallMin || y == wallMax) {
-                tileMap->setTile(x, y, TileType::COBBLE);
-            }
-            else if ((x == 7 && y == 7) || (x == 31 && y == 31)) {
-                tileMap->setTile(x, y, TileType::NPC);
-            }
-            // Interior dirt
-            else {
-                tileMap->setTile(x, y, TileType::DIRT);
-            }
-        }
-    }
 
     // Initialize player at center
     player.x = 15;
@@ -90,7 +70,7 @@ void GameStateVisual::handleEvent(const InputState& inputState) {
             (player.y == 7 && (player.x == 8 || player.x == 6))) {
             // if so, print a tutorial statement
             should_print = true;
-            msg = "Welcome to CYBER-SPACE!! (Press enter to continue)";
+            msg = "Welcome to CYBER-SPACE!!\n(Press TAB to continue)";
             return;
         }
     }
@@ -239,8 +219,8 @@ void GameStateVisual::drawMap() {
     // Calculate visible tile range
     int startX = static_cast<int>(cameraPos.x / GRID_SIZE);
     int startY = static_cast<int>(cameraPos.y / GRID_SIZE);
-    int endX = startX + (screenWidth / GRID_SIZE) + 2;  // +2 for partial tiles
-    int endY = startY + (screenHeight / GRID_SIZE) + 2;
+    int endX = startX + (screenWidth / GRID_SIZE);
+    int endY = startY + (screenHeight / GRID_SIZE);
 
     // Clamp to map bounds
     startX = std::max(0, startX);

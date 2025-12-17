@@ -26,9 +26,26 @@ void ConsoleBuffer::deleteChar() {
     }
 }
 
+// Adds a string to the text console, with an input src for e.g. coloring.
+// If the string is longer than the line width, it's broken up.
+// If a return character is encountered, a line break is inserted.
 void ConsoleBuffer::addLine(const std::string& s, const sourceEnum& src) {
-    for (int i = 0; i < width && i < s.length(); i++) {
-        line_buff[active_line][i] = s[i];
+    int ch_idx = 0;
+    int line_idx = 0;
+    while (ch_idx < s.length()) {
+        if (line_idx % width == 0 && line_idx > 0) {
+            nextLine(src);
+            line_idx = 0;
+        }
+        else if (s[ch_idx] == '\n') {
+            nextLine(src);
+            line_idx = 0;
+            ch_idx++;
+            continue;
+        }
+        line_buff[active_line][line_idx] = s[ch_idx];
+        ch_idx++;
+        line_idx++;
     }
     nextLine(src);
 }
