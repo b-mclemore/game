@@ -3,7 +3,7 @@
 
 #include <engine/gamestate.h>
 #include <engine/console_buffer.h>
-#include "game.h"
+#include <game/game.h>
 
 // right side of screen, text
 
@@ -38,6 +38,9 @@ public:
 
     void onResize(int newWidth, int newHeight) override;
 
+    // wrapper for cbuff so that we can add lines from outside this gamestate (i.e. in gamestatemain)
+    void addLine(const std::string& s, const sourceEnum& src);
+
 private:
     std::shared_ptr<SpriteRenderer> sRenderer;
     std::shared_ptr<GeometryRenderer> gRenderer;
@@ -59,6 +62,7 @@ private:
     Color consoleColor;
     Color textColor;
     Color genericColor;
+    Color npcColor;
 
     void drawText();
     // wrapper for whatever controller class we want to create later.

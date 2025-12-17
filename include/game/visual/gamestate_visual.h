@@ -3,8 +3,8 @@
 #define GAMESTATE_VISUAL_H
 
 #include <engine/gamestate.h>
-#include "game.h"
-#include "tilemap.h"
+#include <game/game.h>
+#include <game/tilemap.h>
 
 // left side of screen, visual
 
@@ -43,6 +43,10 @@ public:
     void setGame(IGame*) override;
 
     void onResize(int newWidth, int newHeight) override;
+
+    // Whether to print something to console after interaction, and what to print
+    bool should_print = false;
+    std::string msg;
 
 private:
     // Movement keys

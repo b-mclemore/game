@@ -6,7 +6,8 @@
 
 enum sourceEnum {
     genericSource,
-    playerSource
+    playerSource,
+    npcSource
 };
 
 class ConsoleBuffer {
@@ -27,7 +28,7 @@ public:
     std::vector<std::pair<std::string, sourceEnum>> getAllLines();
 
     // add an entire line, should be used by the system
-    void addLine(const std::string& s);
+    void addLine(const std::string& s, const sourceEnum& src);
 
 private:
     int width;

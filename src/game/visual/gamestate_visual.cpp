@@ -1,4 +1,4 @@
-#include <game/gamestate_visual.h>
+#include <game/visual/gamestate_visual.h>
 #include <engine/resource_manager.h>
 #include <game/game.h>
 #include <engine/log.h>
@@ -28,22 +28,23 @@ void GameStateVisual::load() {
 
     // Load textures
     ResourceManager::loadTexture("./assets/textures/goblin.png", "player");
+    ResourceManager::loadTexture("./assets/textures/goblin.png", "npc");
     ResourceManager::loadTexture("./assets/textures/cobble.png", "cobble");
     ResourceManager::loadTexture("./assets/textures/dirt.png", "dirt");
     ResourceManager::loadTexture("./assets/textures/empty.png", "empty");
 
-    // Create map (30×30 tiles)
+    // Create map
     tileMap = std::make_unique<TileMap>(30, 30);
 
     // Calculate border positions
     int centerTile = 15;
     // int wallDistance = 13;
     int wallMin = 0;
-    int wallMax = 29;
+    int wallMax = 28;
 
     // Initialize map layout
-    for (int y = 0; y < 30; y++) {
-        for (int x = 0; x < 30; x++) {
+    for (int y = 0; y < wallMax; y++) {
+        for (int x = 0; x < wallMax; x++) {
             // Outside wall empty
             if (x < wallMin || x > wallMax || y < wallMin || y > wallMax) {
                 tileMap->setTile(x, y, TileType::EMPTY);
@@ -51,6 +52,9 @@ void GameStateVisual::load() {
             // Wall border cobble
             else if (x == wallMin || x == wallMax || y == wallMin || y == wallMax) {
                 tileMap->setTile(x, y, TileType::COBBLE);
+            }
+            else if ((x == 7 && y == 7) || (x == 31 && y == 31)) {
+                tileMap->setTile(x, y, TileType::NPC);
             }
             // Interior dirt
             else {
@@ -77,8 +81,20 @@ void GameStateVisual::resume() {
 }
 
 void GameStateVisual::handleEvent(const InputState& inputState) {
-    // Event handling is now empty - movement happens in update()
-    // Could add non-movement actions here (open inventory, etc.)
+    // movement is handled in update
+
+    if (inputState.keyboardState.isJustPressed(SDL_SCANCODE_RETURN)) {
+        // check if we're trying to interact with an npc (@TODO make a list of
+        // npcs somewhere so we can just iterate or something)
+        if ((player.x == 7 && (player.y == 8 || player.y == 6)) ||
+            (player.y == 7 && (player.x == 8 || player.x == 6))) {
+            // if so, print a tutorial statement
+            should_print = true;
+            msg = "Welcome to CYBER-SPACE!! (Press enter to continue)";
+            return;
+        }
+    }
+    should_print = false;
 }
 
 void GameStateVisual::update(unsigned int dt) {
@@ -236,6 +252,7 @@ void GameStateVisual::drawMap() {
     const Texture2D& emptyTex = ResourceManager::getTexture("empty");
     const Texture2D& dirtTex = ResourceManager::getTexture("dirt");
     const Texture2D& cobbleTex = ResourceManager::getTexture("cobble");
+    const Texture2D& npcTex = ResourceManager::getTexture("npc");
 
     // Render visible tiles
     for (int y = startY; y < endY; y++) {
@@ -252,6 +269,7 @@ void GameStateVisual::drawMap() {
                 case TileType::EMPTY:  tex = &emptyTex; break;
                 case TileType::DIRT:   tex = &dirtTex; break;
                 case TileType::COBBLE: tex = &cobbleTex; break;
+                case TileType::NPC:    tex = &npcTex; break;
             }
 
             if (tex) {

@@ -2,7 +2,7 @@
 #include <engine/resource_manager.h>
 #include <engine/gamestate.h>
 #include <game/gamestate_main.h>
-#include <game/gamestate_menu.h>
+#include <game/menus/gamestate_mainmenu.h>
 
 void Game::init(int screenWidth, int screenHeight) {
     windowWidth = screenWidth;
@@ -36,7 +36,7 @@ void Game::load() {
     tRenderer = std::make_shared<TextRenderer>(ResourceManager::getShader("text"));
 
     // Game state - Start with menu
-    changeState(std::make_unique<GameStateMenu>(sRenderer, gRenderer, tRenderer));
+    changeState(std::make_unique<GameStateMainMenu>(sRenderer, gRenderer, tRenderer));
 }
 
 void Game::handleInputs() {

@@ -1,56 +1,52 @@
-#include <game/gamestate_menu.h>
+#include <game/menus/gamestate_mainmenu.h>
+#include <game/menus/gamestate_helpmenu.h>
+#include <game/menus/gamestate_settingsmenu.h>
 #include <engine/resource_manager.h>
 #include <game/gamestate_main.h>
 #include <engine/log.h>
 
-GameStateMenu::GameStateMenu(
-        std::shared_ptr<SpriteRenderer> _sRenderer,
-        std::shared_ptr<GeometryRenderer> _gRenderer,
-        std::shared_ptr<TextRenderer> _tRenderer
-) : sRenderer(std::move(_sRenderer)), gRenderer(std::move(_gRenderer)), tRenderer(std::move(_tRenderer)) {
+GameStateMainMenu::GameStateMainMenu(
+        std::shared_ptr<SpriteRenderer> sr,
+        std::shared_ptr<GeometryRenderer> gr,
+        std::shared_ptr<TextRenderer> tr
+) : GameStateMenu(std::move(sr), std::move(gr), std::move(tr)) {
 }
 
-GameStateMenu::~GameStateMenu() {
+GameStateMainMenu::~GameStateMainMenu() {
 }
 
-void GameStateMenu::setGame(IGame* _game) {
-    game = dynamic_cast<Game*>(_game);
+void GameStateMainMenu::load() {
+    GameStateMenu::load();
+
+    numOptions = 4;
 }
 
-void GameStateMenu::load() {
-    screenWidth = game->windowWidth;
-    screenHeight = game->windowHeight;
-    selectedOption = MenuOptions::start;
-    fontTexture = ResourceManager::loadTexture("./assets/textures/font_atlas.png", "font_atlas");
-    fontTexture.setFiltering(GL_NEAREST, GL_NEAREST);
+void GameStateMainMenu::clean() {
 }
 
-void GameStateMenu::clean() {
-}
-
-void GameStateMenu::pause() {
-}
-
-void GameStateMenu::resume() {
-}
-
-void GameStateMenu::handleEvent(const InputState& inputState) {
+void GameStateMainMenu::handleEvent(const InputState& inputState) {
     // Navigate menu
     if (inputState.keyboardState.isJustPressed(SDL_SCANCODE_W) ||
         inputState.keyboardState.isJustPressed(SDL_SCANCODE_UP)) {
-        selectedOption = (MenuOptions)((selectedOption + 3) % 4);
+        selectedOption = ((selectedOption - 1) % numOptions);
     }
 
     if (inputState.keyboardState.isJustPressed(SDL_SCANCODE_S) ||
         inputState.keyboardState.isJustPressed(SDL_SCANCODE_DOWN)) {
-        selectedOption = (MenuOptions)((selectedOption + 1) % 4);
+        selectedOption = ((selectedOption + 1) % numOptions);
     }
 
     // Confirm with Enter
     if (inputState.keyboardState.isJustPressed(SDL_SCANCODE_RETURN)) {
         switch (selectedOption) {
-            case MenuOptions::start:
+            case 0:
                 game->changeState(std::make_unique<GameStateMain>(sRenderer, gRenderer, tRenderer));
+                break;
+            case 1:
+                game->changeState(std::make_unique<GameStateHelpMenu>(sRenderer, gRenderer, tRenderer));
+                break;
+            case 2:
+                game->changeState(std::make_unique<GameStateSettingsMenu>(sRenderer, gRenderer, tRenderer));
                 break;
             default:
                 game->gameIsRunning = false;
@@ -58,11 +54,10 @@ void GameStateMenu::handleEvent(const InputState& inputState) {
     }
 }
 
-void GameStateMenu::update(unsigned int dt) {
-    // No update logic needed for menu
+void GameStateMainMenu::update(unsigned int dt) {
 }
 
-void GameStateMenu::draw() {
+void GameStateMainMenu::draw() {
     // Colors for menu items
     // (Using rectangles as placeholders)
     Color selectedColor = Color(255, 255, 0, 255);  // yellow
@@ -73,16 +68,16 @@ void GameStateMenu::draw() {
     Color settingsColor = normalColor;
     Color quitColor = normalColor;
     switch (selectedOption) {
-        case MenuOptions::start:
+        case 0:
             startColor = selectedColor;
             break;
-        case MenuOptions::help:
+        case 1:
             helpColor = selectedColor;
             break;
-        case MenuOptions::settings:
+        case 2:
             settingsColor = selectedColor;
             break;
-        case MenuOptions::quit:
+        case 3:
             quitColor = selectedColor;
             break;
     }

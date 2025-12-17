@@ -1,4 +1,4 @@
-#include <game/gamestate_textual.h>
+#include <game/textual/gamestate_textual.h>
 #include <engine/resource_manager.h>
 #include <game/game.h>
 #include <engine/log.h>
@@ -9,6 +9,8 @@ Color activeConsoleColor = Color(32, 196, 32, 255);
 Color inactiveConsoleColor = Color(32, 96, 32, 255);
 Color activeGenericColor = Color(32, 32, 112, 255);
 Color inactiveGenericColor = Color(32, 32, 56, 255);
+Color activeNpcColor = Color(112, 32, 56, 255);
+Color inactiveNpcColor = Color(64, 32, 64, 255);
 
 GameStateTextual::GameStateTextual(
         std::shared_ptr<SpriteRenderer> _sRenderer,
@@ -18,6 +20,7 @@ GameStateTextual::GameStateTextual(
     consoleColor = activeConsoleColor;
     textColor = activeTextColor;
     genericColor = activeGenericColor;
+    npcColor = activeNpcColor;
 }
 
 GameStateTextual::~GameStateTextual() {
@@ -43,12 +46,14 @@ void GameStateTextual::pause() {
     textColor = inactiveTextColor;
     consoleColor = inactiveConsoleColor;
     genericColor = inactiveGenericColor;
+    npcColor = inactiveNpcColor;
 }
 
 void GameStateTextual::resume() {
     textColor = activeTextColor;
     consoleColor = activeConsoleColor;
     genericColor = activeGenericColor;
+    npcColor = activeNpcColor;
 }
 
 void GameStateTextual::handleEvent(const InputState& inputState) {
@@ -91,10 +96,17 @@ void GameStateTextual::drawText() {
             tRenderer->drawText(fontTexture, " >"+l, Vector2(offset, 0), consoleColor);
         else if (c == sourceEnum::genericSource) 
             tRenderer->drawText(fontTexture, "  "+l, Vector2(offset, lineNum * (GRID_SIZE + vSpacing)), genericColor);
+        else if (c == sourceEnum::npcSource) 
+            tRenderer->drawText(fontTexture, "  "+l, Vector2(offset, lineNum * (GRID_SIZE + vSpacing)), npcColor);
         else 
             tRenderer->drawText(fontTexture, "  "+l, Vector2(offset, lineNum * (GRID_SIZE + vSpacing)), textColor);
         lineNum += 1;
     }
+}
+
+// Add line wrapper
+void GameStateTextual::addLine(const std::string& s, const sourceEnum& src) {
+    cbuff->addLine(s, src);
 }
 
 void GameStateTextual::onResize(int newWidth, int newHeight) {
@@ -120,11 +132,11 @@ void GameStateTextual::handleCommand(const std::string& command) {
         game->gameIsRunning = false;
     } 
     else if (c == "help" || c == "h") {
-        cbuff->addLine("Press tab to switch.");
-        cbuff->addLine("Use WASD to move.");
-        cbuff->addLine("Enter 'h' for help.");
-        cbuff->addLine("Enter 'q' to quit.");
+        cbuff->addLine("Press tab to switch.", sourceEnum::genericSource);
+        cbuff->addLine("Use WASD to move.", sourceEnum::genericSource);
+        cbuff->addLine("Enter 'h' for help.", sourceEnum::genericSource);
+        cbuff->addLine("Enter 'q' to quit.", sourceEnum::genericSource);
     } else if (c == "activate") {
-        cbuff->addLine("SYSTEM ACTIVATED!!!");
+        cbuff->addLine("SYSTEM ACTIVATED!!!", sourceEnum::genericSource);
     }
 }

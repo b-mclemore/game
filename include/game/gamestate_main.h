@@ -1,11 +1,11 @@
 #ifndef GAMESTATE_MAIN_H
 #define GAMESTATE_MAIN_H
 
-#include "../engine/gamestate.h"
-#include "game.h"
-#include "tilemap.h"
-#include <game/gamestate_textual.h>
-#include <game/gamestate_visual.h>
+#include <engine/gamestate.h>
+#include <game/game.h>
+#include <game/tilemap.h>
+#include <game/textual/gamestate_textual.h>
+#include <game/visual/gamestate_visual.h>
 
 // Main scene of the game, essentially a wrapper for the 
 // left/right Visual/Textual gamestates
@@ -38,6 +38,8 @@ public:
     void setGame(IGame*) override;
 
     void onResize(int newWidth, int newHeight) override;
+
+    void toggleVis();
 
 private:
     std::shared_ptr<SpriteRenderer> sRenderer;

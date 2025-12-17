@@ -26,11 +26,11 @@ void ConsoleBuffer::deleteChar() {
     }
 }
 
-void ConsoleBuffer::addLine(const std::string& s) {
+void ConsoleBuffer::addLine(const std::string& s, const sourceEnum& src) {
     for (int i = 0; i < width && i < s.length(); i++) {
         line_buff[active_line][i] = s[i];
     }
-    nextLine(sourceEnum::genericSource);
+    nextLine(src);
 }
 
 void ConsoleBuffer::nextLine(sourceEnum previous_source) {

@@ -43,18 +43,25 @@ void GameStateMain::resume() {
     txt->resume();
 }
 
+void GameStateMain::toggleVis() {
+    isVisToggled = !isVisToggled;
+    if (isVisToggled) txt->pause();
+    else txt->resume();
+}
+
 void GameStateMain::handleEvent(const InputState& inputState) {
     // toggle if tab is pressed, otherwise pass handling to toggled state
     if (inputState.keyboardState.isJustPressed(SDL_Scancode(SDL_SCANCODE_TAB))) {
-        isVisToggled = !isVisToggled;
-        if (isVisToggled) {
-            txt->pause();
-        } else {
-            txt->resume();
-        }
+        toggleVis();
     }
     else if (isVisToggled) {
+        // if vis decides to print to console, catch and add the message,
+        // then toggle
         vis->handleEvent(inputState);
+        if (vis->should_print) {
+            txt->addLine(vis->msg, sourceEnum::npcSource);
+            toggleVis();
+        }
     } else {
         txt->handleEvent(inputState);
     }

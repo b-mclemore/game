@@ -14,13 +14,24 @@ roadmap
 [X] reset line when buffer circles
 [X] add delete for buffer
 [X] other color for system addLines
-[ ] handle up arrow on console
-[ ] add placeholders GameStateHelp and GameStateSettings for the opening menu
+[X] add placeholders GameStateHelp and GameStateSettings for the opening menu
 
-[ ] render an enemy
-[ ] the enemy moves once every two ticks
-[ ] when the enemy reaches the character, transition to new GameStateVisual
-[ ] visual transition between GameState (game modules)
+[X] render a second character
+[X] on interaction w/ character, switch to textual and print tutorial message
+[ ] empty command "" after interacting w/ character should switch context back
+
+[ ] Make text render colors more neat
+[ ] Fix "add line" to handle multi-line adds
+[ ] fix map rendering, simplify. see below
+
+[ ] render a third character
+[ ] on interaction w/ character, switch visual gamemode to chessboard
+[ ] visual transition between GameState (game modules), e.g. a fade in/out
+
+[ ] handle up arrow on console
+[ ] rework rendering to use a single renderer with global grid to handle resizing?
+    can use sprite atlas of 8x8 sprites
+[ ] maths speedups?
 
 screen should be split always
 left screen is game, right is "console" (text)

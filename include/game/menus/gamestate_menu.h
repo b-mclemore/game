@@ -1,11 +1,10 @@
 #ifndef GAMESTATE_MENU_H
 #define GAMESTATE_MENU_H
 
-#include "../engine/gamestate.h"
-#include "game.h"
+#include <engine/gamestate.h>
+#include <game/game.h>
 
-enum MenuOptions {start, help, settings, quit};
-
+// class for displaying menus (main menu, settings, etc)
 class GameStateMenu : public GameState {
 public:
     GameStateMenu(
@@ -20,21 +19,12 @@ public:
 
     void load() override;
 
-    void clean() override;
-
-    void pause() override;
-
-    void resume() override;
-
-    void handleEvent(const InputState&) override;
-
-    void update(unsigned int dt) override;
-
-    void draw() override;
+    void pause() override {}
+    void resume() override {}
 
     void setGame(IGame*) override;
 
-private:
+protected:
     std::shared_ptr<SpriteRenderer> sRenderer;
     std::shared_ptr<GeometryRenderer> gRenderer;
     std::shared_ptr<TextRenderer> tRenderer;
@@ -45,7 +35,8 @@ private:
     int screenWidth { 0 };
     int screenHeight { 0 };
 
-    MenuOptions selectedOption { MenuOptions::start };
+    uint selectedOption = 0;
+    size_t numOptions = 0;
 };
 
 #endif

@@ -6,7 +6,8 @@
 enum class TileType {
     EMPTY = 0,
     DIRT = 1,
-    COBBLE = 2
+    COBBLE = 2,
+    NPC = 3
 };
 
 class TileMap {
