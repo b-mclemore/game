@@ -11,7 +11,11 @@ roadmap
 [X] on tab, pause GameStateVisual and move to text
 [X] when paused, text entry is enabled
 [X] console typing rendering, handle "quit" or "q" to quit. toLowerCase everything.
-[ ] reset line when buffer circles
+[X] reset line when buffer circles
+[X] add delete for buffer
+[X] other color for system addLines
+[ ] handle up arrow on console
+[ ] add placeholders GameStateHelp and GameStateSettings for the opening menu
 
 [ ] render an enemy
 [ ] the enemy moves once every two ticks

@@ -58,6 +58,7 @@ private:
 
     Color consoleColor;
     Color textColor;
+    Color genericColor;
 
     void drawText();
     // wrapper for whatever controller class we want to create later.

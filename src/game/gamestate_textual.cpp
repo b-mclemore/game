@@ -7,14 +7,17 @@ Color activeTextColor = Color(128, 128, 32, 255);
 Color inactiveTextColor = Color(64, 64, 32, 255);
 Color activeConsoleColor = Color(32, 196, 32, 255);
 Color inactiveConsoleColor = Color(32, 96, 32, 255);
+Color activeGenericColor = Color(32, 32, 112, 255);
+Color inactiveGenericColor = Color(32, 32, 56, 255);
 
 GameStateTextual::GameStateTextual(
         std::shared_ptr<SpriteRenderer> _sRenderer,
         std::shared_ptr<GeometryRenderer> _gRenderer,
         std::shared_ptr<TextRenderer> _tRenderer
 ) : sRenderer(std::move(_sRenderer)), gRenderer(std::move(_gRenderer)), tRenderer(std::move(_tRenderer)) {
-    consoleColor = inactiveConsoleColor;
-    textColor = inactiveTextColor;
+    consoleColor = activeConsoleColor;
+    textColor = activeTextColor;
+    genericColor = activeGenericColor;
 }
 
 GameStateTextual::~GameStateTextual() {
@@ -39,19 +42,31 @@ void GameStateTextual::clean() {
 void GameStateTextual::pause() {
     textColor = inactiveTextColor;
     consoleColor = inactiveConsoleColor;
+    genericColor = inactiveGenericColor;
 }
 
 void GameStateTextual::resume() {
     textColor = activeTextColor;
     consoleColor = activeConsoleColor;
+    genericColor = activeGenericColor;
 }
 
 void GameStateTextual::handleEvent(const InputState& inputState) {
+    // RETURN executes the command
     if (inputState.keyboardState.isJustPressed(SDL_SCANCODE_RETURN)) {
         std::string currLine = cbuff->getActiveLine();
-        cbuff->nextLine();
+        cbuff->nextLine(sourceEnum::playerSource);
         handleCommand(currLine);
-    } else {
+    } 
+    // DEL deletes the last character entered
+    else if (inputState.keyboardState.isJustPressed(SDL_SCANCODE_BACKSPACE)) {
+        cbuff->deleteChar();
+    // UP ARROW copies the last used player command
+    } else if (inputState.keyboardState.isJustPressed(SDL_SCANCODE_UP)) {
+        // cbuff->previousCommand();
+    }
+    // otherwise, ASCII if possible
+    else {
         for (int sc = 4; sc < 29; sc++) {
             if (inputState.keyboardState.isJustPressed((SDL_Scancode)sc)) {
                 cbuff->addChar((char)(sc + 93));
@@ -68,12 +83,15 @@ void GameStateTextual::draw() {
 }
 
 void GameStateTextual::drawText() {
-    std::vector<std::string> lines = cbuff->getAllLines();
+    auto lines = cbuff->getAllLines();
     int lineNum = 0;
-    for (auto l : lines) {
+    for (auto& [l, c] : lines) {
+
         if (lineNum == 0)
             tRenderer->drawText(fontTexture, " >"+l, Vector2(offset, 0), consoleColor);
-        else
+        else if (c == sourceEnum::genericSource) 
+            tRenderer->drawText(fontTexture, "  "+l, Vector2(offset, lineNum * (GRID_SIZE + vSpacing)), genericColor);
+        else 
             tRenderer->drawText(fontTexture, "  "+l, Vector2(offset, lineNum * (GRID_SIZE + vSpacing)), textColor);
         lineNum += 1;
     }
@@ -106,5 +124,7 @@ void GameStateTextual::handleCommand(const std::string& command) {
         cbuff->addLine("Use WASD to move.");
         cbuff->addLine("Enter 'h' for help.");
         cbuff->addLine("Enter 'q' to quit.");
+    } else if (c == "activate") {
+        cbuff->addLine("SYSTEM ACTIVATED!!!");
     }
 }

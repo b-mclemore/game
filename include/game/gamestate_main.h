@@ -53,7 +53,7 @@ private:
 
     GameStateVisual *vis;
     GameStateTextual *txt;
-    bool isVisToggled = true; // toggle between vis and text
+    bool isVisToggled = false; // toggle between vis and text
 };
 
 #endif

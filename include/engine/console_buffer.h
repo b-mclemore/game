@@ -4,13 +4,29 @@
 #include <vector>
 #include <memory>
 
+enum sourceEnum {
+    genericSource,
+    playerSource
+};
+
 class ConsoleBuffer {
 public:
     ConsoleBuffer(int width, int height, int grid_size);
+    // add/del char, should be used only by player
     void addChar(char c);
-    void nextLine(); // just progresses the active_line
+    void deleteChar();
+
+    // progresses the active line and clears the new current line
+    // sets the source type of the previous active line
+    void nextLine(sourceEnum previous_source);
+    
+    // pulls out the string that's currently active
     std::string getActiveLine();
-    std::vector<std::string> getAllLines();
+
+    // get all of the lines and their sources
+    std::vector<std::pair<std::string, sourceEnum>> getAllLines();
+
+    // add an entire line, should be used by the system
     void addLine(const std::string& s);
 
 private:
@@ -19,8 +35,11 @@ private:
     int grid_size;
     int active_line = 0;
     int char_idx = 0;
+    int last_player_command = 0;
 
     std::vector<std::vector<char>> line_buff;
+    // keeps track of where lines come from, e.g. system output vs user input
+    std::vector<sourceEnum> source_buff;
 };
 
 #endif
