@@ -31,7 +31,7 @@ void GameStateVisual::load() {
     ResourceManager::loadTexture("./assets/textures/cobble.png", "cobble");
     ResourceManager::loadTexture("./assets/textures/dirt.png", "dirt");
     ResourceManager::loadTexture("./assets/textures/empty.png", "empty");
-    ResourceManager::loadTexture("./assets/textures/goblin_new1.png", "goblin_moving");
+    ResourceManager::loadTexture("./assets/textures/goblin_new.png", "goblin_moving");
 
     playerRenderer = std::make_shared<AtlasRenderer>(ResourceManager::getShader("atlas"));
     mapRenderer = std::make_shared<AtlasRenderer>(ResourceManager::getShader("atlas"));
@@ -48,8 +48,7 @@ void GameStateVisual::load() {
     tileMap->setTile(7, 7, TileType::NPC);
 
     // Initialize player at center
-    player.x = 15;
-    player.y = 15;
+    player->setPos(15, 15);
 
     // Initialize camera
     cameraPos = calculateCameraPosition();
@@ -70,8 +69,9 @@ void GameStateVisual::handleEvent(const InputState& inputState) {
     if (inputState.keyboardState.isJustPressed(SDL_SCANCODE_RETURN)) {
         // check if we're trying to interact with an npc (@TODO make a list of
         // npcs somewhere so we can just iterate or something)
-        if ((player.x == 7 && (player.y == 8 || player.y == 6)) ||
-            (player.y == 7 && (player.x == 8 || player.x == 6))) {
+        auto [px, py] = player->getPos();
+        if ((px == 7 && (py == 8 || py == 6)) ||
+            (py == 7 && (px == 8 || px == 6))) {
             // if so, print a tutorial statement
             should_print = true;
             msg = "The goblin screeches\n'Welcome to CYBER-SPACE!!'";
@@ -82,6 +82,8 @@ void GameStateVisual::handleEvent(const InputState& inputState) {
 }
 
 void GameStateVisual::update(unsigned int dt) {
+    // get current position
+    auto [px, py] = player->getPos();
     // Get current input state
     const InputState& inputState = game->getInputManager()->getState();
 
@@ -96,39 +98,43 @@ void GameStateVisual::update(unsigned int dt) {
 
     // Move right
     if (inputState.keyboardState.isJustPressed(SDL_Scancode(moveRightKey))) {
-        int newX = player.x + 1;
-        if (isValidPosition(newX, player.y)) {
-            player.x = newX;
+        int newX = px + 1;
+        if (isValidPosition(newX, py)) {
+            player->setPos(newX, py);
             movedInstantly = true;
             movementAccumulator = 0.0f;
         }
+        player->setDir(PlayerFacing::E);
     }
     // Move left
     else if (inputState.keyboardState.isJustPressed(SDL_Scancode(moveLeftKey))) {
-        int newX = player.x - 1;
-        if (isValidPosition(newX, player.y)) {
-            player.x = newX;
+        int newX = px - 1;
+        if (isValidPosition(newX, py)) {
+            player->setPos(newX, py);
             movedInstantly = true;
             movementAccumulator = 0.0f;
         }
+        player->setDir(PlayerFacing::W);
     }
     // Move up
     else if (inputState.keyboardState.isJustPressed(SDL_Scancode(moveUpKey))) {
-        int newY = player.y + 1;
-        if (isValidPosition(player.x, newY)) {
-            player.y = newY;
+        int newY = py + 1;
+        if (isValidPosition(px, newY)) {
+            player->setPos(px, newY);
             movedInstantly = true;
             movementAccumulator = 0.0f;
         }
+        player->setDir(PlayerFacing::N);
     }
     // Move down
     else if (inputState.keyboardState.isJustPressed(SDL_Scancode(moveDownKey))) {
-        int newY = player.y - 1;
-        if (isValidPosition(player.x, newY)) {
-            player.y = newY;
+        int newY = py - 1;
+        if (isValidPosition(px, newY)) {
+            player->setPos(px, newY);
             movedInstantly = true;
             movementAccumulator = 0.0f;
         }
+        player->setDir(PlayerFacing::S);
     }
 
     // If no instant movement, handle continuous movement for held keys
@@ -141,30 +147,30 @@ void GameStateVisual::update(unsigned int dt) {
 
             // Move right
             if (inputState.keyboardState.isDown(SDL_Scancode(moveRightKey))) {
-                int newX = player.x + 1;
-                if (isValidPosition(newX, player.y)) {
-                    player.x = newX;
+                int newX = px + 1;
+                if (isValidPosition(newX, py)) {
+                    player->setPos(newX, py);
                 }
             }
             // Move left
             else if (inputState.keyboardState.isDown(SDL_Scancode(moveLeftKey))) {
-                int newX = player.x - 1;
-                if (isValidPosition(newX, player.y)) {
-                    player.x = newX;
+                int newX = px - 1;
+                if (isValidPosition(newX, py)) {
+                    player->setPos(newX, py);
                 }
             }
             // Move up
             else if (inputState.keyboardState.isDown(SDL_Scancode(moveUpKey))) {
-                int newY = player.y + 1;
-                if (isValidPosition(player.x, newY)) {
-                    player.y = newY;
+                int newY = py + 1;
+                if (isValidPosition(px, newY)) {
+                    player->setPos(px, newY);
                 }
             }
             // Move down
             else if (inputState.keyboardState.isDown(SDL_Scancode(moveDownKey))) {
-                int newY = player.y - 1;
-                if (isValidPosition(player.x, newY)) {
-                    player.y = newY;
+                int newY = py - 1;
+                if (isValidPosition(px, newY)) {
+                    player->setPos(px, newY);
                 }
             }
         }
@@ -190,9 +196,10 @@ bool GameStateVisual::isValidPosition(int x, int y) {
 }
 
 Vector2 GameStateVisual::calculateCameraPosition() {
+    auto [px, py] = player->getPos();
     // Center player on screen
-    float camX = player.x * GRID_SIZE - screenWidth / 2.0f;
-    float camY = player.y * GRID_SIZE - screenHeight / 2.0f;
+    float camX = px * GRID_SIZE - screenWidth / 2.0f;
+    float camY = py * GRID_SIZE - screenHeight / 2.0f;
 
     // Clamp to map boundaries
     float maxCamX = tileMap->getWidth() * GRID_SIZE - screenWidth;
@@ -205,11 +212,14 @@ Vector2 GameStateVisual::calculateCameraPosition() {
 }
 
 void GameStateVisual::drawPlayer() {
+    auto [px, py] = player->getPos();
     // Player position relative to camera
-    float screenX = player.x * GRID_SIZE - cameraPos.x;
-    float screenY = player.y * GRID_SIZE - cameraPos.y;
+    float screenX = px * GRID_SIZE - cameraPos.x;
+    float screenY = py * GRID_SIZE - cameraPos.y;
     
-    playerRenderer->setUV(0, 1, ResourceManager::getTexture("goblin_moving"));
+    int row = static_cast<int>(player->getDir());
+    int col = static_cast<int>(player->getAnimFrame());
+    playerRenderer->setUV(row, col, ResourceManager::getTexture("goblin_moving"));
     playerRenderer->drawAtlasSprite(
         ResourceManager::getTexture("goblin_moving"),
         Vector2(screenX, screenY),

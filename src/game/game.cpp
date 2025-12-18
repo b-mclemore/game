@@ -122,10 +122,6 @@ void Game::updateProjectionMatrix() {
     );
     Matrix4 finalProjection = twoDimTranslation * projection;
 
-    ResourceManager::getShader("sprite").use();
-    ResourceManager::getShader("sprite").setMatrix4("projection", finalProjection);
-    ResourceManager::getShader("rect").use();
-    ResourceManager::getShader("rect").setMatrix4("projection", finalProjection);
-    ResourceManager::getShader("text").use();
-    ResourceManager::getShader("text").setMatrix4("projection", finalProjection);
+    ResourceManager::getShader("atlas").use();
+    ResourceManager::getShader("atlas").setMatrix4("projection", finalProjection);
 }

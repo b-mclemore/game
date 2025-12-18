@@ -5,22 +5,9 @@
 #include <engine/gamestate.h>
 #include <game/game.h>
 #include <game/tilemap.h>
+#include <game/visual/player.h>
 
 // left side of screen, visual
-
-// Player structure for grid-based movement
-struct Player {
-    int x;
-    int y;
-};
-
-// Which direction the player faces
-enum PlayerFacing {
-    S = 0, // default
-    N = 1,
-    E = 2,
-    W = 3
-};
 
 // Visual scene of the game, contains grid-based room movement
 class GameStateVisual : public GameState {
@@ -62,7 +49,7 @@ private:
     int moveUpKey { 0 };
     int moveDownKey { 0 };
 
-    PlayerFacing dir = PlayerFacing::S;
+    Player *player = new Player();
 
     // renderer for character
     std::shared_ptr<AtlasRenderer> playerRenderer;
@@ -75,9 +62,7 @@ private:
     int screenHeight { 0 };
 
     // Grid settings
-    static constexpr int GRID_SIZE = 32;  // Size of each grid cell in pixels
-
-    Player player {};
+    static constexpr int GRID_SIZE = 64;  // Size of each grid cell in pixels
 
     // Map and camera
     std::unique_ptr<TileMap> tileMap;
