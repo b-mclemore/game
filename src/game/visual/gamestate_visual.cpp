@@ -32,16 +32,22 @@ void GameStateVisual::load() {
     ResourceManager::loadTexture("./assets/textures/cobble.png", "cobble");
     ResourceManager::loadTexture("./assets/textures/dirt.png", "dirt");
     ResourceManager::loadTexture("./assets/textures/empty.png", "empty");
+    ResourceManager::loadTexture("./assets/textures/goblin_new1.png", "goblin_moving");
+
+    aRenderer = std::make_shared<AtlasRenderer>(ResourceManager::getShader("text"));
+    aRenderer->atlasGlyphWidth = 16;
+    aRenderer->atlasGlyphHeight = 16;
+    aRenderer->rows = 4;
+    aRenderer->cols = 3;
+    aRenderer->setUV(0, 0, ResourceManager::getTexture("goblin_moving"));
+    ResourceManager::getTexture("goblin_moving").setFiltering(GL_NEAREST, GL_NEAREST);
 
     // Create map
     tileMap = std::make_unique<TileMap>(screenWidth / GRID_SIZE, screenHeight / GRID_SIZE);
-    tileMap->loadTileMap("assets/maps/bigmap.txt");
+    tileMap->loadTileMap("assets/maps/tutorial.txt");
 
     // Load npcs
     tileMap->setTile(7, 7, TileType::NPC);
-
-    // Calculate border positions
-    int centerTile = 15;
 
     // Initialize player at center
     player.x = 15;
@@ -70,7 +76,7 @@ void GameStateVisual::handleEvent(const InputState& inputState) {
             (player.y == 7 && (player.x == 8 || player.x == 6))) {
             // if so, print a tutorial statement
             should_print = true;
-            msg = "Welcome to CYBER-SPACE!!\n(Press TAB to continue)";
+            msg = "The goblin screeches\n'Welcome to CYBER-SPACE!!'";
             return;
         }
     }
@@ -204,9 +210,10 @@ void GameStateVisual::drawPlayer() {
     // Player position relative to camera
     float screenX = player.x * GRID_SIZE - cameraPos.x;
     float screenY = player.y * GRID_SIZE - cameraPos.y;
-
-    sRenderer->drawSprite(
-        ResourceManager::getTexture("player"),
+    
+    aRenderer->setUV(0, 1, ResourceManager::getTexture("goblin_moving"));
+    aRenderer->drawSprite(
+        ResourceManager::getTexture("goblin_moving"),
         Vector2(screenX, screenY),
         Vector2(GRID_SIZE, GRID_SIZE)
     );

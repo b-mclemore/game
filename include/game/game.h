@@ -16,6 +16,7 @@
 #include "../engine/renderer_sprite.h"
 #include "../engine/renderer_geometry.h"
 #include "../engine/renderer_text.h"
+#include "../engine/renderer_atlas.h"
 #include "../engine/gamestate.h"
 #include "../engine/igame.h"
 

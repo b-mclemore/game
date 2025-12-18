@@ -7,7 +7,8 @@ GameStateMain::GameStateMain(
         std::shared_ptr<SpriteRenderer> _sRenderer,
         std::shared_ptr<GeometryRenderer> _gRenderer,
         std::shared_ptr<TextRenderer> _tRenderer
-) : sRenderer(std::move(_sRenderer)), gRenderer(std::move(_gRenderer)), tRenderer(std::move(_tRenderer)) {
+) : sRenderer(std::move(_sRenderer)), gRenderer(std::move(_gRenderer)),
+    tRenderer(std::move(_tRenderer)) {
     vis = new GameStateVisual(sRenderer, gRenderer);
     txt = new GameStateTextual(sRenderer, gRenderer, tRenderer);
 }

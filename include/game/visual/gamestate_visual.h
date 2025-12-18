@@ -14,6 +14,14 @@ struct Player {
     int y;
 };
 
+// Which direction the player faces
+enum PlayerFacing {
+    S = 0, // default
+    N = 1,
+    E = 2,
+    W = 3
+};
+
 // Visual scene of the game, contains grid-based room movement
 class GameStateVisual : public GameState {
 public:
@@ -55,8 +63,11 @@ private:
     int moveUpKey { 0 };
     int moveDownKey { 0 };
 
+    PlayerFacing dir = PlayerFacing::S;
+
     std::shared_ptr<SpriteRenderer> sRenderer;
     std::shared_ptr<GeometryRenderer> gRenderer;
+    std::shared_ptr<AtlasRenderer> aRenderer;
 
     Game* game { nullptr };
     int screenWidth { 0 };
