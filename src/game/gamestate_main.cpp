@@ -4,13 +4,12 @@
 #include <engine/log.h>
 
 GameStateMain::GameStateMain(
-        std::shared_ptr<SpriteRenderer> _sRenderer,
-        std::shared_ptr<GeometryRenderer> _gRenderer,
+        std::shared_ptr<AtlasRenderer> _aRenderer,
         std::shared_ptr<TextRenderer> _tRenderer
-) : sRenderer(std::move(_sRenderer)), gRenderer(std::move(_gRenderer)),
+) : aRenderer(std::move(_aRenderer)),
     tRenderer(std::move(_tRenderer)) {
-    vis = new GameStateVisual(sRenderer, gRenderer);
-    txt = new GameStateTextual(sRenderer, gRenderer, tRenderer);
+    vis = new GameStateVisual(aRenderer);
+    txt = new GameStateTextual(tRenderer);
 }
 
 GameStateMain::~GameStateMain() {
@@ -61,7 +60,6 @@ void GameStateMain::handleEvent(const InputState& inputState) {
         vis->handleEvent(inputState);
         if (vis->should_print) {
             txt->addLine(vis->msg, sourceEnum::npcSource);
-            toggleVis();
         }
     } else {
         txt->handleEvent(inputState);

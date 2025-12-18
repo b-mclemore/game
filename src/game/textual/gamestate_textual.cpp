@@ -5,10 +5,8 @@
 #include <game/textual/text_colors.h>
 
 GameStateTextual::GameStateTextual(
-        std::shared_ptr<SpriteRenderer> _sRenderer,
-        std::shared_ptr<GeometryRenderer> _gRenderer,
         std::shared_ptr<TextRenderer> _tRenderer
-) : sRenderer(std::move(_sRenderer)), gRenderer(std::move(_gRenderer)), tRenderer(std::move(_tRenderer)) {
+) : tRenderer(std::move(_tRenderer)) {
 }
 
 GameStateTextual::~GameStateTextual() {

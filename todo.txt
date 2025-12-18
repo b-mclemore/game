@@ -20,8 +20,9 @@ roadmap
 [X] Make text render colors more neat
 [X] Fix "add line" to handle multi-line adds
 
-[ ] remove spriterenderer and make all sprites drawn from an atlas
-[ ] remove geometry renderer
+[X] remove spriterenderer and make all sprites drawn from an atlas
+[X] remove geometry renderer
+[X] fix uv errors for atlas w single-sprite
 [ ] npc class, npc list for map, map class?
 [ ] render a third character
 [ ] on interaction w/ character, switch visual gamemode to chessboard

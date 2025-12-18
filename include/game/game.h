@@ -13,8 +13,6 @@
 
 #include "../engine/input_manager.h"
 #include "../engine/shader.h"
-#include "../engine/renderer_sprite.h"
-#include "../engine/renderer_geometry.h"
 #include "../engine/renderer_text.h"
 #include "../engine/renderer_atlas.h"
 #include "../engine/gamestate.h"
@@ -57,8 +55,7 @@ public:
 private:
     void updateProjectionMatrix();
     std::unique_ptr<InputManager> inputManager;
-    std::shared_ptr<SpriteRenderer> sRenderer;
-    std::shared_ptr<GeometryRenderer> gRenderer;
+    std::shared_ptr<AtlasRenderer> aRenderer;
     std::shared_ptr<TextRenderer> tRenderer;
     std::vector<std::unique_ptr<GameState>> gameStates;
 };

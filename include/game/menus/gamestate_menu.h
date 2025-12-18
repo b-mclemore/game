@@ -8,8 +8,7 @@
 class GameStateMenu : public GameState {
 public:
     GameStateMenu(
-            std::shared_ptr<SpriteRenderer>,
-            std::shared_ptr<GeometryRenderer>,
+            std::shared_ptr<AtlasRenderer>,
             std::shared_ptr<TextRenderer>
     );
 
@@ -25,8 +24,7 @@ public:
     void setGame(IGame*) override;
 
 protected:
-    std::shared_ptr<SpriteRenderer> sRenderer;
-    std::shared_ptr<GeometryRenderer> gRenderer;
+    std::shared_ptr<AtlasRenderer> aRenderer;
     std::shared_ptr<TextRenderer> tRenderer;
 
     Texture2D fontTexture;

@@ -11,8 +11,6 @@
 class GameStateTextual : public GameState {
 public:
     GameStateTextual(
-            std::shared_ptr<SpriteRenderer>,
-            std::shared_ptr<GeometryRenderer>,
             std::shared_ptr<TextRenderer>
     );
 
@@ -42,8 +40,6 @@ public:
     void addLine(const std::string& s, const sourceEnum& src);
 
 private:
-    std::shared_ptr<SpriteRenderer> sRenderer;
-    std::shared_ptr<GeometryRenderer> gRenderer;
     std::shared_ptr<TextRenderer> tRenderer;
     
     Texture2D fontTexture;

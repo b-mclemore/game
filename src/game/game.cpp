@@ -14,9 +14,7 @@ void Game::init(int screenWidth, int screenHeight) {
 
 void Game::load() {
     // Load shaders
-    ResourceManager::loadShader("assets/shaders/sprite.vert", "assets/shaders/sprite.frag", "", "sprite");
-    ResourceManager::loadShader("assets/shaders/rect.vert", "assets/shaders/rect.frag", "", "rect");
-    ResourceManager::loadShader("assets/shaders/text.vert", "assets/shaders/text.frag", "", "text");
+    ResourceManager::loadShader("assets/shaders/text.vert", "assets/shaders/text.frag", "", "atlas");
     // Compute projection matrix
     auto fWindowWidth = static_cast<float>(windowWidth);
     auto fWindowHeight = static_cast<float>(windowHeight);
@@ -24,19 +22,14 @@ void Game::load() {
     Matrix4 twoDimTranslation = Matrix4::createTranslation(Vector3(-fWindowWidth / 2.f, -fWindowHeight / 2.f, 0.0f));
     Matrix4 finalProjection = twoDimTranslation * projection;
     // Configure shaders
-    ResourceManager::getShader("sprite").use();
-    ResourceManager::getShader("sprite").setMatrix4("projection", finalProjection);
-    ResourceManager::getShader("rect").use();
-    ResourceManager::getShader("rect").setMatrix4("projection", finalProjection);
-    ResourceManager::getShader("text").use();
-    ResourceManager::getShader("text").setMatrix4("projection", finalProjection);
+    ResourceManager::getShader("atlas").use();
+    ResourceManager::getShader("atlas").setMatrix4("projection", finalProjection);
     // Set render-specific controls
-    sRenderer = std::make_shared<SpriteRenderer>(ResourceManager::getShader("sprite"));
-    gRenderer = std::make_shared<GeometryRenderer>(ResourceManager::getShader("rect"));
-    tRenderer = std::make_shared<TextRenderer>(ResourceManager::getShader("text"));
+    aRenderer = std::make_shared<AtlasRenderer>(ResourceManager::getShader("atlas"));
+    tRenderer = std::make_shared<TextRenderer>(ResourceManager::getShader("atlas"));
 
     // Game state - Start with menu
-    changeState(std::make_unique<GameStateMainMenu>(sRenderer, gRenderer, tRenderer));
+    changeState(std::make_unique<GameStateMainMenu>(aRenderer, tRenderer));
 }
 
 void Game::handleInputs() {

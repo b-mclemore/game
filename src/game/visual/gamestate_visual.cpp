@@ -4,9 +4,8 @@
 #include <engine/log.h>
 
 GameStateVisual::GameStateVisual(
-        std::shared_ptr<SpriteRenderer> _sRenderer,
-        std::shared_ptr<GeometryRenderer> _gRenderer
-) : sRenderer(std::move(_sRenderer)), gRenderer(std::move(_gRenderer)) {
+        std::shared_ptr<AtlasRenderer> _aRenderer
+) : mapRenderer(std::move(_aRenderer)) {
 }
 
 GameStateVisual::~GameStateVisual() {
@@ -34,12 +33,11 @@ void GameStateVisual::load() {
     ResourceManager::loadTexture("./assets/textures/empty.png", "empty");
     ResourceManager::loadTexture("./assets/textures/goblin_new1.png", "goblin_moving");
 
-    aRenderer = std::make_shared<AtlasRenderer>(ResourceManager::getShader("text"));
-    aRenderer->atlasGlyphWidth = 16;
-    aRenderer->atlasGlyphHeight = 16;
-    aRenderer->rows = 4;
-    aRenderer->cols = 3;
-    aRenderer->setUV(0, 0, ResourceManager::getTexture("goblin_moving"));
+    playerRenderer = std::make_shared<AtlasRenderer>(ResourceManager::getShader("atlas"));
+    mapRenderer = std::make_shared<AtlasRenderer>(ResourceManager::getShader("atlas"));
+    mapRenderer->setGlyphDim(32);
+    playerRenderer->setGlyphDim(16);
+    playerRenderer->setRowsCols(4, 3);
     ResourceManager::getTexture("goblin_moving").setFiltering(GL_NEAREST, GL_NEAREST);
 
     // Create map
@@ -211,8 +209,8 @@ void GameStateVisual::drawPlayer() {
     float screenX = player.x * GRID_SIZE - cameraPos.x;
     float screenY = player.y * GRID_SIZE - cameraPos.y;
     
-    aRenderer->setUV(0, 1, ResourceManager::getTexture("goblin_moving"));
-    aRenderer->drawSprite(
+    playerRenderer->setUV(0, 1, ResourceManager::getTexture("goblin_moving"));
+    playerRenderer->drawAtlasSprite(
         ResourceManager::getTexture("goblin_moving"),
         Vector2(screenX, screenY),
         Vector2(GRID_SIZE, GRID_SIZE)
@@ -260,7 +258,8 @@ void GameStateVisual::drawMap() {
             }
 
             if (tex) {
-                sRenderer->drawSprite(
+                mapRenderer->setUV(0, 0, *tex);
+                mapRenderer->drawAtlasSprite(
                     *tex,
                     Vector2(screenX, screenY),
                     Vector2(GRID_SIZE, GRID_SIZE)

@@ -8,8 +8,7 @@
 class GameStateHelpMenu : public GameStateMenu {
 public:
     GameStateHelpMenu(
-            std::shared_ptr<SpriteRenderer>,
-            std::shared_ptr<GeometryRenderer>,
+            std::shared_ptr<AtlasRenderer>,
             std::shared_ptr<TextRenderer>
     );
 

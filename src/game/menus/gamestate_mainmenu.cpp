@@ -6,10 +6,9 @@
 #include <engine/log.h>
 
 GameStateMainMenu::GameStateMainMenu(
-        std::shared_ptr<SpriteRenderer> sr,
-        std::shared_ptr<GeometryRenderer> gr,
+        std::shared_ptr<AtlasRenderer> ar,
         std::shared_ptr<TextRenderer> tr
-) : GameStateMenu(std::move(sr), std::move(gr), std::move(tr)) {
+) : GameStateMenu(std::move(ar), std::move(tr)) {
 }
 
 GameStateMainMenu::~GameStateMainMenu() {
@@ -40,13 +39,13 @@ void GameStateMainMenu::handleEvent(const InputState& inputState) {
     if (inputState.keyboardState.isJustPressed(SDL_SCANCODE_RETURN)) {
         switch (selectedOption) {
             case 0:
-                game->changeState(std::make_unique<GameStateMain>(sRenderer, gRenderer, tRenderer));
+                game->changeState(std::make_unique<GameStateMain>(aRenderer, tRenderer));
                 break;
             case 1:
-                game->changeState(std::make_unique<GameStateHelpMenu>(sRenderer, gRenderer, tRenderer));
+                game->changeState(std::make_unique<GameStateHelpMenu>(aRenderer, tRenderer));
                 break;
             case 2:
-                game->changeState(std::make_unique<GameStateSettingsMenu>(sRenderer, gRenderer, tRenderer));
+                game->changeState(std::make_unique<GameStateSettingsMenu>(aRenderer, tRenderer));
                 break;
             default:
                 game->gameIsRunning = false;

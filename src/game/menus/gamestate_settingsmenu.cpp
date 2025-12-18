@@ -5,10 +5,9 @@
 #include <engine/log.h>
 
 GameStateSettingsMenu::GameStateSettingsMenu(
-        std::shared_ptr<SpriteRenderer> sr,
-        std::shared_ptr<GeometryRenderer> gr,
+        std::shared_ptr<AtlasRenderer> ar,
         std::shared_ptr<TextRenderer> tr
-) : GameStateMenu(std::move(sr), std::move(gr), std::move(tr)) {
+) : GameStateMenu(std::move(ar), std::move(tr)) {
 }
 
 GameStateSettingsMenu::~GameStateSettingsMenu() {
@@ -20,7 +19,7 @@ void GameStateSettingsMenu::clean() {
 void GameStateSettingsMenu::handleEvent(const InputState& inputState) {
     // Leave with escape
     if (inputState.keyboardState.isJustPressed(SDL_SCANCODE_ESCAPE)) {
-        game->changeState(std::make_unique<GameStateMainMenu>(sRenderer, gRenderer, tRenderer));
+        game->changeState(std::make_unique<GameStateMainMenu>(aRenderer, tRenderer));
     }
 }
 

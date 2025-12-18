@@ -5,10 +5,9 @@
 
 // class for displaying menus (main menu, settings, etc)
 GameStateMenu::GameStateMenu(
-        std::shared_ptr<SpriteRenderer> _sRenderer,
-        std::shared_ptr<GeometryRenderer> _gRenderer,
+        std::shared_ptr<AtlasRenderer> _aRenderer,
         std::shared_ptr<TextRenderer> _tRenderer
-) : sRenderer(std::move(_sRenderer)), gRenderer(std::move(_gRenderer)), tRenderer(std::move(_tRenderer)) {
+) : aRenderer(std::move(_aRenderer)), tRenderer(std::move(_tRenderer)) {
 }
 
 GameStateMenu::~GameStateMenu() {

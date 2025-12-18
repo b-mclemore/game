@@ -26,8 +26,7 @@ enum PlayerFacing {
 class GameStateVisual : public GameState {
 public:
     GameStateVisual(
-            std::shared_ptr<SpriteRenderer>,
-            std::shared_ptr<GeometryRenderer>
+            std::shared_ptr<AtlasRenderer>
     );
 
     ~GameStateVisual() override;
@@ -65,9 +64,11 @@ private:
 
     PlayerFacing dir = PlayerFacing::S;
 
-    std::shared_ptr<SpriteRenderer> sRenderer;
-    std::shared_ptr<GeometryRenderer> gRenderer;
-    std::shared_ptr<AtlasRenderer> aRenderer;
+    // renderer for character
+    std::shared_ptr<AtlasRenderer> playerRenderer;
+
+    // renderer for map
+    std::shared_ptr<AtlasRenderer> mapRenderer;
 
     Game* game { nullptr };
     int screenWidth { 0 };
