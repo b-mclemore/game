@@ -1,8 +1,8 @@
-#include "../../include/game/tilemap.h"
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
 #include <engine/log.h>
+#include <game/visual/room/tilemap.h>
 
 TileMap::TileMap(int width, int height)
     : width(width), height(height) {

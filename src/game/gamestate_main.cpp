@@ -10,7 +10,6 @@ GameStateMain::GameStateMain(
     tRenderer(std::move(_tRenderer)) {
     vis = new GameStateVisual(aRenderer);
     txt = new GameStateTextual(tRenderer);
-    ch = new GameStateChess(aRenderer);
 }
 
 GameStateMain::~GameStateMain() {
@@ -20,7 +19,6 @@ void GameStateMain::setGame(IGame* _game) {
     game = dynamic_cast<Game*>(_game);
     vis->setGame(_game);
     txt->setGame(_game);
-    ch->setGame(_game);
 }
 
 void GameStateMain::load() {
@@ -28,25 +26,21 @@ void GameStateMain::load() {
     screenHeight = game->windowHeight;
     vis->load();
     txt->load();
-    ch->load();
 }
 
 void GameStateMain::clean() {
     vis->clean();
     txt->clean();
-    ch->clean();
 }
 
 void GameStateMain::pause() {
     vis->pause();
     txt->pause();
-    ch->pause();
 }
 
 void GameStateMain::resume() {
     vis->resume();
     txt->resume();
-    ch->resume();
 }
 
 void GameStateMain::toggleVis() {
@@ -61,30 +55,13 @@ void GameStateMain::handleEvent(const InputState& inputState) {
         toggleVis();
     }
     else if (isVisToggled) {
-        switch (leftMode) {
-            case LeftMode::Visual:
-                vis->handleEvent(inputState);
-                // if vis decides to print to console, catch and add the message,
-                // then toggle
-                if (vis->interaction) {
-                    auto result = *vis->interaction;
-                    vis->interaction.reset();
-
-                    txt->addLine(result.dialog, sourceEnum::npcSource);
-
-                    if (result.type == InteractionType::Chess) {
-                        leftMode = LeftMode::Chess;
-                    }
-                }
-                break;
-            case LeftMode::Chess:
-                ch->handleEvent(inputState);
-
-                if (ch->isGameOver()) {
-                    txt->addLine("Game over!", sourceEnum::npcSource);
-                    leftMode = LeftMode::Visual;
-                }
-                break;
+        vis->handleEvent(inputState);
+        // if vis decides to print to console, catch and add the message,
+        // then toggle
+        if (vis->dialog) {
+            auto result = *vis->dialog;
+            vis->dialog.reset();
+            txt->addLine(result, sourceEnum::npcSource);
         }
     } else {
         txt->handleEvent(inputState);

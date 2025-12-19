@@ -1,4 +1,4 @@
-#include <game/visual/character.h>
+#include <game/visual/room/character.h>
 
 Facing Character::getDir() {
 	return dir;

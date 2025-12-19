@@ -3,7 +3,7 @@
 
 #include <engine/gamestate.h>
 #include <game/game.h>
-#include <game/visual/character.h>
+#include <game/visual/room/character.h>
 
 class Player : public Character {
 public:

@@ -1,4 +1,4 @@
-#include <game/chess/gamestate_chess.h>
+#include <game/visual/chess/gamestate_chess.h>
 #include <engine/resource_manager.h>
 #include <game/game.h>
 #include <engine/log.h>
@@ -40,7 +40,8 @@ void GameStateChess::update(unsigned int dt) {
 }
 
 void GameStateChess::draw() {
-
+    // No chess logic yet, immediately quit
+    interaction = { ChessEnding::Quit, "Sorry, this hasn't\nbeen implemented" };
 }
 
 

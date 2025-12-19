@@ -27,9 +27,9 @@ roadmap
 [X] render a third character
 [X] fix npc interaction handling
 [X] on interaction w/ character, switch visual gamemode to chessboard
-[ ] abstract the left-side rendering more from the main class (the large switch statements everywhere,
+[X] abstract the left-side rendering more from the main class (the large switch statements everywhere,
     e.g. checking if Visual or Chess in draw, update, handle, etc)
-[ ] abstract the rendering more from the gamestate_visual class (drawPlayer, drawMap, etc)
+[X] abstract the rendering more from the gamestate_visual class (drawPlayer, drawMap, etc)
 [X] simplify movement handling, create new fn
 [ ] chess puzzle gamestate class -> draw board, read fen, handle gameover
 

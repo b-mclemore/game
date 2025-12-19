@@ -2,8 +2,21 @@
 #ifndef GAMESTATE_CHESS_H
 #define GAMESTATE_CHESS_H
 
+#include <optional>
 #include <engine/gamestate.h>
 #include <game/game.h>
+
+enum class ChessEnding {
+    Win,
+    Loss,
+    Draw,
+    Quit
+};
+
+struct ChessResult {
+    ChessEnding type;
+    std::string dialog;
+};
 
 // chess minigame
 class GameStateChess : public GameState {
@@ -35,6 +48,8 @@ public:
     void onResize(int newWidth, int newHeight) override;
 
     bool isGameOver();
+
+    std::optional<ChessResult> interaction;
 
 private:
     // renderer for map

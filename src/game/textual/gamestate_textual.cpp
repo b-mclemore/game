@@ -111,11 +111,13 @@ void GameStateTextual::handleCommand(const std::string& command) {
         game->gameIsRunning = false;
     } 
     else if (c == "help" || c == "h") {
-        cbuff->addLine("Press tab to switch.", sourceEnum::genericSource);
-        cbuff->addLine("Use WASD to move.", sourceEnum::genericSource);
-        cbuff->addLine("Press ENTER to interact.", sourceEnum::genericSource);
-        cbuff->addLine("Enter 'h' for help.", sourceEnum::genericSource);
-        cbuff->addLine("Enter 'q' to quit.", sourceEnum::genericSource);
+        cbuff->addLine("Press tab to switch.\n"
+            "Use WASD to move.\n"
+            "Press ENTER to interact.\n"
+            "Some interactions will\n"
+            "  change you.\n"
+            "Enter 'h' for help.\n"
+            "Enter 'q' to quit.", sourceEnum::genericSource);
     } else if (c == "activate") {
         cbuff->addLine("SYSTEM ACTIVATED!!!", sourceEnum::genericSource);
     }

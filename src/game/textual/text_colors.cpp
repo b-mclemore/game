@@ -9,8 +9,8 @@ Color inactiveConsoleColor = Color(32, 96, 32, 255);
 Color activeGenericColor = Color(32, 32, 112, 255);
 Color inactiveGenericColor = Color(32, 32, 56, 255);
 // text from visual side, the npc messages
-Color activeNpcColor = Color(112, 32, 56, 255);
-Color inactiveNpcColor = Color(64, 32, 64, 255);
+Color activeNpcColor = Color(112, 32, 64, 255);
+Color inactiveNpcColor = Color(84, 32, 84, 255);
 
 Color errorColor = Color(255, 0, 0);
 

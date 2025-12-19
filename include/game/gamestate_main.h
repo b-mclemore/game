@@ -3,15 +3,8 @@
 
 #include <engine/gamestate.h>
 #include <game/game.h>
-#include <game/tilemap.h>
 #include <game/textual/gamestate_textual.h>
 #include <game/visual/gamestate_visual.h>
-#include <game/chess/gamestate_chess.h>
-
-enum class LeftMode {
-    Visual,
-    Chess
-};
 
 // Main scene of the game, essentially a wrapper for the 
 // left/right Visual/Textual gamestates
@@ -59,9 +52,7 @@ private:
 
     GameStateVisual *vis;
     GameStateTextual *txt;
-    GameStateChess *ch;
     bool isVisToggled = false; // toggle between vis and text
-    LeftMode leftMode = LeftMode::Visual; // toggle between minigames
 };
 
 #endif

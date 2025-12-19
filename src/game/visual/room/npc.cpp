@@ -1,4 +1,4 @@
-#include <game/visual/npc.h>
+#include <game/visual/room/npc.h>
 
 Npc::Npc(InteractionType typ, const std::string& d, int x, int y) {
     opensMinigame = (typ == InteractionType::Chess);
