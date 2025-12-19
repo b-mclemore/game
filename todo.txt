@@ -23,13 +23,20 @@ roadmap
 [X] remove spriterenderer and make all sprites drawn from an atlas
 [X] remove geometry renderer
 [X] fix uv errors for atlas w single-sprite
-[ ] npc class, npc list for map, map class?
-[ ] render a third character
-[ ] on interaction w/ character, switch visual gamemode to chessboard
-[ ] chess puzzle gamestate class
+[X] npc class, npc list for map
+[X] render a third character
+[X] fix npc interaction handling
+[X] on interaction w/ character, switch visual gamemode to chessboard
+[ ] abstract the left-side rendering more from the main class (the large switch statements everywhere,
+    e.g. checking if Visual or Chess in draw, update, handle, etc)
+[ ] abstract the rendering more from the gamestate_visual class (drawPlayer, drawMap, etc)
+[X] simplify movement handling, create new fn
+[ ] chess puzzle gamestate class -> draw board, read fen, handle gameover
 
 [ ] animate character moving
 [ ] better floor/wall textures
+[ ] only re-draw changed textures?
+[ ] make npc face character on interaction
 
 [ ] handle up arrow on console
 [ ] empty command "" after interacting w/ character should switch context back

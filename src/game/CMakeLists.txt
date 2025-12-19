@@ -1,5 +1,6 @@
 file( GLOB game_SOURCES 
     *.cpp
+    chess/*.cpp
     menus/*.cpp
     textual/*.cpp
     visual/*.cpp

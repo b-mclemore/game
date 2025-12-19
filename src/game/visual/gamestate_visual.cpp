@@ -45,7 +45,8 @@ void GameStateVisual::load() {
     tileMap->loadTileMap("assets/maps/tutorial.txt");
 
     // Load npcs
-    tileMap->setTile(7, 7, TileType::NPC);
+    npcs.push_back(Npc(InteractionType::Talk, "The goblin screeches\n'Welcome to CYBER-SPACE!!'", 7, 7));
+    npcs.push_back(Npc(InteractionType::Chess, "It's GAME TIME!", 17, 10));
 
     // Initialize player at center
     player->setPos(15, 15);
@@ -67,122 +68,85 @@ void GameStateVisual::handleEvent(const InputState& inputState) {
     // movement is handled in update
 
     if (inputState.keyboardState.isJustPressed(SDL_SCANCODE_RETURN)) {
-        // check if we're trying to interact with an npc (@TODO make a list of
-        // npcs somewhere so we can just iterate or something)
+        // check if we're trying to interact with an npc
         auto [px, py] = player->getPos();
-        if ((px == 7 && (py == 8 || py == 6)) ||
-            (py == 7 && (px == 8 || px == 6))) {
-            // if so, print a tutorial statement
-            should_print = true;
-            msg = "The goblin screeches\n'Welcome to CYBER-SPACE!!'";
-            return;
+        for (auto& c : npcs) {
+            if (c.isAdjacent(px, py)) {
+                interaction = c.interact();
+                return;
+            }
         }
     }
-    should_print = false;
+}
+
+bool GameStateVisual::movementJustPressed() {
+    const InputState& inputState = game->getInputManager()->getState();
+    return
+    (inputState.keyboardState.isJustPressed(SDL_Scancode(moveRightKey)) ||
+    inputState.keyboardState.isJustPressed(SDL_Scancode(moveLeftKey)) ||
+    inputState.keyboardState.isJustPressed(SDL_Scancode(moveUpKey)) ||
+    inputState.keyboardState.isJustPressed(SDL_Scancode(moveDownKey)));
+}
+
+// Simple boolean check that sees if any of the movekeys are isDown
+bool GameStateVisual::movementKeyDown() {
+    const InputState& inputState = game->getInputManager()->getState();
+    return
+    (inputState.keyboardState.isDown(SDL_Scancode(moveRightKey)) ||
+    inputState.keyboardState.isDown(SDL_Scancode(moveLeftKey)) ||
+    inputState.keyboardState.isDown(SDL_Scancode(moveUpKey)) ||
+    inputState.keyboardState.isDown(SDL_Scancode(moveDownKey)));
+}
+
+// Moves the player according to key
+void GameStateVisual::movePlayer(const InputState& inputState) {
+    auto [px, py] = player->getPos();
+    Facing f = Facing::N;
+    if (inputState.keyboardState.isDown(SDL_Scancode(moveLeftKey)))
+        f = Facing::W;
+    else if (inputState.keyboardState.isDown(SDL_Scancode(moveRightKey)))
+        f = Facing::E;
+    else if (inputState.keyboardState.isDown(SDL_Scancode(moveDownKey)))
+        f = Facing::S;
+    auto [dx, dy] = movementMap[static_cast<int>(f)];
+    if (isValidPosition(px+dx, py+dy))
+        player->setPos(px+dx, py+dy);
+    player->setDir(f);
 }
 
 void GameStateVisual::update(unsigned int dt) {
-    // get current position
-    auto [px, py] = player->getPos();
     // Get current input state
     const InputState& inputState = game->getInputManager()->getState();
-
-    // Check if any movement key is pressed
-    bool anyKeyPressed = inputState.keyboardState.isDown(SDL_Scancode(moveRightKey)) ||
-                         inputState.keyboardState.isDown(SDL_Scancode(moveLeftKey)) ||
-                         inputState.keyboardState.isDown(SDL_Scancode(moveUpKey)) ||
-                         inputState.keyboardState.isDown(SDL_Scancode(moveDownKey));
-
-    // Check for instant movement on key press (JustPressed)
-    bool movedInstantly = false;
-
-    // Move right
-    if (inputState.keyboardState.isJustPressed(SDL_Scancode(moveRightKey))) {
-        int newX = px + 1;
-        if (isValidPosition(newX, py)) {
-            player->setPos(newX, py);
-            movedInstantly = true;
-            movementAccumulator = 0.0f;
-        }
-        player->setDir(PlayerFacing::E);
-    }
-    // Move left
-    else if (inputState.keyboardState.isJustPressed(SDL_Scancode(moveLeftKey))) {
-        int newX = px - 1;
-        if (isValidPosition(newX, py)) {
-            player->setPos(newX, py);
-            movedInstantly = true;
-            movementAccumulator = 0.0f;
-        }
-        player->setDir(PlayerFacing::W);
-    }
-    // Move up
-    else if (inputState.keyboardState.isJustPressed(SDL_Scancode(moveUpKey))) {
-        int newY = py + 1;
-        if (isValidPosition(px, newY)) {
-            player->setPos(px, newY);
-            movedInstantly = true;
-            movementAccumulator = 0.0f;
-        }
-        player->setDir(PlayerFacing::N);
-    }
-    // Move down
-    else if (inputState.keyboardState.isJustPressed(SDL_Scancode(moveDownKey))) {
-        int newY = py - 1;
-        if (isValidPosition(px, newY)) {
-            player->setPos(px, newY);
-            movedInstantly = true;
-            movementAccumulator = 0.0f;
-        }
-        player->setDir(PlayerFacing::S);
+    bool anyKeyPressed = movementKeyDown();
+    if (!anyKeyPressed) {
+        movementAccumulator = 0.0f;
+        return;
     }
 
-    // If no instant movement, handle continuous movement for held keys
-    if (!movedInstantly && anyKeyPressed) {
+    // get current position
+    auto [px, py] = player->getPos();
+
+    bool anyKeyJustPressed = movementJustPressed();
+    if (anyKeyJustPressed) {
+        // Handle justpressed key (meaning not held down, immediate movement)
+        movementAccumulator = 0.0f;
+        movePlayer(inputState);
+    }
+    else {
+        // If no instant movement, handle continuous movement for held keys
         movementAccumulator += dt;
-
-        // Check if enough time has passed for continuous movement
+        // Check if enough time has passed
         if (movementAccumulator >= MOVEMENT_DELAY) {
             movementAccumulator -= MOVEMENT_DELAY;
-
-            // Move right
-            if (inputState.keyboardState.isDown(SDL_Scancode(moveRightKey))) {
-                int newX = px + 1;
-                if (isValidPosition(newX, py)) {
-                    player->setPos(newX, py);
-                }
-            }
-            // Move left
-            else if (inputState.keyboardState.isDown(SDL_Scancode(moveLeftKey))) {
-                int newX = px - 1;
-                if (isValidPosition(newX, py)) {
-                    player->setPos(newX, py);
-                }
-            }
-            // Move up
-            else if (inputState.keyboardState.isDown(SDL_Scancode(moveUpKey))) {
-                int newY = py + 1;
-                if (isValidPosition(px, newY)) {
-                    player->setPos(px, newY);
-                }
-            }
-            // Move down
-            else if (inputState.keyboardState.isDown(SDL_Scancode(moveDownKey))) {
-                int newY = py - 1;
-                if (isValidPosition(px, newY)) {
-                    player->setPos(px, newY);
-                }
-            }
+            movePlayer(inputState);
         }
-    } else if (!anyKeyPressed) {
-        // Reset accumulator when no keys are pressed
-        movementAccumulator = 0.0f;
     }
 }
 
 void GameStateVisual::draw() {
     drawMap();
     drawPlayer();
+    drawNpcs();
 }
 
 bool GameStateVisual::isValidPosition(int x, int y) {
@@ -247,7 +211,6 @@ void GameStateVisual::drawMap() {
     const Texture2D& emptyTex = ResourceManager::getTexture("empty");
     const Texture2D& dirtTex = ResourceManager::getTexture("dirt");
     const Texture2D& cobbleTex = ResourceManager::getTexture("cobble");
-    const Texture2D& npcTex = ResourceManager::getTexture("npc");
 
     // Render visible tiles
     for (int y = startY; y < endY; y++) {
@@ -264,7 +227,6 @@ void GameStateVisual::drawMap() {
                 case TileType::EMPTY:  tex = &emptyTex; break;
                 case TileType::DIRT:   tex = &dirtTex; break;
                 case TileType::COBBLE: tex = &cobbleTex; break;
-                case TileType::NPC:    tex = &npcTex; break;
             }
 
             if (tex) {
@@ -276,6 +238,35 @@ void GameStateVisual::drawMap() {
                 );
             }
         }
+    }
+}
+
+void GameStateVisual::drawNpcs() {
+    // Calculate visible tile range
+    int startX = static_cast<int>(cameraPos.x / GRID_SIZE);
+    int startY = static_cast<int>(cameraPos.y / GRID_SIZE);
+    int endX = startX + (screenWidth / GRID_SIZE);
+    int endY = startY + (screenHeight / GRID_SIZE);
+
+    // Clamp to map bounds
+    startX = std::max(0, startX);
+    startY = std::max(0, startY);
+    endX = std::min(tileMap->getWidth(), endX);
+    endY = std::min(tileMap->getHeight(), endY);
+
+    for (auto& c : npcs) {
+        auto [x, y] = c.getPos();
+        if ((x < startX || endX <= x) ||
+            (y < startY || endY <= y)) continue;
+        const Texture2D& npcTex = ResourceManager::getTexture("npc");
+        mapRenderer->setUV(0, 0, npcTex);
+        float screenX = x * GRID_SIZE - cameraPos.x;
+        float screenY = y * GRID_SIZE - cameraPos.y;
+        mapRenderer->drawAtlasSprite(
+            npcTex,
+            Vector2(screenX, screenY),
+            Vector2(GRID_SIZE, GRID_SIZE)
+        );
     }
 }
 
