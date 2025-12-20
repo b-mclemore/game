@@ -65,6 +65,7 @@ private:
     };
 
     Player *player = new Player();
+    bool lastSwungLeft = true;
     std::vector<Npc> npcs = std::vector<Npc>();
 
     // renderer for character
@@ -86,7 +87,7 @@ private:
 
     // Movement timing
     float movementAccumulator { 0.0f };
-    static constexpr float MOVEMENT_DELAY = 150.0f;  // Milliseconds between moves
+    static constexpr float MOVEMENT_DELAY = 250.0f;  // Milliseconds between moves
 
     void drawPlayer();
     void drawMap();

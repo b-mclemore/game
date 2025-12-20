@@ -10,6 +10,7 @@
 #include <GL/glew.h>
 #include <vector>
 #include <memory>
+#include <string>
 
 #include "../engine/input_manager.h"
 #include "../engine/shader.h"

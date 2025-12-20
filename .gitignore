@@ -12,6 +12,7 @@ scripts/
 
 # Builds
 build/
+buildwin/
 release/
 .vscode/ipch
 cmake-build-*

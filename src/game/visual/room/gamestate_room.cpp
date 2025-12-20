@@ -29,7 +29,7 @@ void GameStateRoom::load() {
     ResourceManager::loadTexture("./assets/textures/goblin.png", "player");
     ResourceManager::loadTexture("./assets/textures/goblin.png", "npc");
     ResourceManager::loadTexture("./assets/textures/cobble.png", "cobble");
-    ResourceManager::loadTexture("./assets/textures/dirt.png", "dirt");
+    ResourceManager::loadTexture("./assets/textures/dirtflat.png", "dirt");
     ResourceManager::loadTexture("./assets/textures/empty.png", "empty");
     ResourceManager::loadTexture("./assets/textures/gobrin.png", "goblin_moving");
 
@@ -290,15 +290,18 @@ void GameStateRoom::toggleAnimationFrame() {
     AnimationFrame current = player->getAnimFrame();
 
     if (current == AnimationFrame::noSwing) {
-        // Starting from rest, go to left swing
-        player->setAnimFrame(AnimationFrame::swingLeft);
+        if (lastSwungLeft) {
+            player->setAnimFrame(AnimationFrame::swingLeft);
+            lastSwungLeft = false;
+        } else {
+            player->setAnimFrame(AnimationFrame::swingRight);
+            lastSwungLeft = true;
+        }
     }
     else if (current == AnimationFrame::swingLeft) {
-        // Alternate to right swing
-        player->setAnimFrame(AnimationFrame::swingRight);
+        player->setAnimFrame(AnimationFrame::noSwing);
     }
     else {
-        // From right swing, back to left swing
-        player->setAnimFrame(AnimationFrame::swingLeft);
+        player->setAnimFrame(AnimationFrame::noSwing);
     }
 }

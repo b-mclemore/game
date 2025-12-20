@@ -1,6 +1,7 @@
 #ifndef CONSOLE_BUFFER_H
 #define CONSOLE_BUFFER_H
 
+#include <string>
 #include <vector>
 #include <memory>
 

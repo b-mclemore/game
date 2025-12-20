@@ -1,6 +1,7 @@
 #ifndef TEXT_RENDERER_H
 #define TEXT_RENDERER_H
 
+#include <string>
 #include <engine/renderer_atlas.h>
 
 // A renderer class able to write text, accomplished by drawing

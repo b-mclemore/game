@@ -1,6 +1,7 @@
 #ifndef GAMESTATE_MENU_H
 #define GAMESTATE_MENU_H
 
+#include <cstddef>
 #include <engine/gamestate.h>
 #include <game/game.h>
 
@@ -33,7 +34,7 @@ protected:
     int screenWidth { 0 };
     int screenHeight { 0 };
 
-    uint selectedOption = 0;
+    unsigned int selectedOption = 0;
     size_t numOptions = 0;
 };
 
