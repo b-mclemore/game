@@ -93,6 +93,7 @@ private:
     void drawNpcs();
     bool isValidPosition(int x, int y);
     Vector2 calculateCameraPosition();
+    void toggleAnimationFrame();
 };
 
 #endif

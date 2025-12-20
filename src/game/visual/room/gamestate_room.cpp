@@ -120,11 +120,13 @@ void GameStateRoom::update(unsigned int dt) {
     bool anyKeyPressed = movementKeyDown();
     if (!anyKeyPressed) {
         movementAccumulator = 0.0f;
+        player->setIsMoving(false);
+        player->setAnimFrame(AnimationFrame::noSwing);
         return;
     }
 
-    // get current position
-    auto [px, py] = player->getPos();
+    // Store previous position to detect actual movement
+    auto [prevX, prevY] = player->getPos();
 
     bool anyKeyJustPressed = movementJustPressed();
     if (anyKeyJustPressed) {
@@ -140,6 +142,13 @@ void GameStateRoom::update(unsigned int dt) {
             movementAccumulator -= MOVEMENT_DELAY;
             movePlayer(inputState);
         }
+    }
+
+    // Detect if player actually moved and update animation
+    auto [newX, newY] = player->getPos();
+    if (newX != prevX || newY != prevY) {
+        player->setIsMoving(true);
+        toggleAnimationFrame();
     }
 }
 
@@ -275,4 +284,21 @@ void GameStateRoom::onResize(int newWidth, int newHeight) {
     screenHeight = newHeight;
 
     // Camera will automatically recenter on next draw() call
+}
+
+void GameStateRoom::toggleAnimationFrame() {
+    AnimationFrame current = player->getAnimFrame();
+
+    if (current == AnimationFrame::noSwing) {
+        // Starting from rest, go to left swing
+        player->setAnimFrame(AnimationFrame::swingLeft);
+    }
+    else if (current == AnimationFrame::swingLeft) {
+        // Alternate to right swing
+        player->setAnimFrame(AnimationFrame::swingRight);
+    }
+    else {
+        // From right swing, back to left swing
+        player->setAnimFrame(AnimationFrame::swingLeft);
+    }
 }

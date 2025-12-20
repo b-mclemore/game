@@ -33,10 +33,10 @@ roadmap
 [X] simplify movement handling, create new fn
 [ ] chess puzzle gamestate class -> draw board, read fen, handle gameover
 
-[ ] animate character moving
+[X] animate character moving
+[ ] FIX MAP TO NOT RENDER PARTIAL TILES
 [ ] fix collision (maybe have a list or a second map)
 [ ] better floor/wall textures
-[ ] only re-draw changed textures?
 [ ] make npc face character on interaction
 
 [ ] handle up arrow on console

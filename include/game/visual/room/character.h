@@ -33,6 +33,9 @@ public:
 	void setAnimFrame(AnimationFrame af);
 	AnimationFrame getAnimFrame();
 
+	void setIsMoving(bool moving);
+	bool getIsMoving();
+
 private:
 	// Movement state tracking
     Facing dir = Facing::S;

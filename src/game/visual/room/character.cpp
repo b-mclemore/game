@@ -24,3 +24,11 @@ void Character::setAnimFrame(AnimationFrame af) {
 AnimationFrame Character::getAnimFrame() {
 	return animFrameColumn;
 }
+
+void Character::setIsMoving(bool moving) {
+	isMoving = moving;
+}
+
+bool Character::getIsMoving() {
+	return isMoving;
+}
