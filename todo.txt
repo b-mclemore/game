@@ -34,6 +34,7 @@ roadmap
 [ ] chess puzzle gamestate class -> draw board, read fen, handle gameover
 
 [ ] animate character moving
+[ ] fix collision (maybe have a list or a second map)
 [ ] better floor/wall textures
 [ ] only re-draw changed textures?
 [ ] make npc face character on interaction

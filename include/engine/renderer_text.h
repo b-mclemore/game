@@ -15,6 +15,9 @@ public:
         Vector2 position, 
         Color color = Color::white);
 
+    // setter for renderGlyphDim
+    void setTextSize(int size);
+
 private:
 };
 

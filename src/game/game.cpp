@@ -27,6 +27,8 @@ void Game::load() {
     // Set render-specific controls
     aRenderer = std::make_shared<AtlasRenderer>(ResourceManager::getShader("atlas"));
     tRenderer = std::make_shared<TextRenderer>(ResourceManager::getShader("atlas"));
+    // Set text size
+    // tRenderer->setGlyphDim(32);
 
     // Game state - Start with menu
     changeState(std::make_unique<GameStateMainMenu>(aRenderer, tRenderer));

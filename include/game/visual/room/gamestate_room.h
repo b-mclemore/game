@@ -3,6 +3,7 @@
 #define GAMESTATE_ROOM_H
 
 #include <optional>
+#include <map>
 #include <engine/gamestate.h>
 #include <game/game.h>
 #include <game/visual/room/tilemap.h>
@@ -56,11 +57,11 @@ private:
     int moveUpKey { 0 };
     int moveDownKey { 0 };
     // Movement map, holds (dx, dy)
-    std::vector<std::pair<int, int>> movementMap = {
-        {0, 1},  // N
-        {-1, 0}, // W
-        {1, 0},  // E
-        {0, -1}  // S
+    std::map<Facing, std::pair<int, int>> movementMap = {
+        { Facing::N, {0, 1}},
+        { Facing::W, {-1, 0}},
+        { Facing::E, {1, 0}},
+        { Facing::S, {0, -1}},
     };
 
     Player *player = new Player();

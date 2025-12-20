@@ -31,7 +31,7 @@ void GameStateRoom::load() {
     ResourceManager::loadTexture("./assets/textures/cobble.png", "cobble");
     ResourceManager::loadTexture("./assets/textures/dirt.png", "dirt");
     ResourceManager::loadTexture("./assets/textures/empty.png", "empty");
-    ResourceManager::loadTexture("./assets/textures/goblin_new.png", "goblin_moving");
+    ResourceManager::loadTexture("./assets/textures/gobrin.png", "goblin_moving");
 
     playerRenderer = std::make_shared<AtlasRenderer>(ResourceManager::getShader("atlas"));
     mapRenderer = std::make_shared<AtlasRenderer>(ResourceManager::getShader("atlas"));
@@ -108,7 +108,7 @@ void GameStateRoom::movePlayer(const InputState& inputState) {
         f = Facing::E;
     else if (inputState.keyboardState.isDown(SDL_Scancode(moveDownKey)))
         f = Facing::S;
-    auto [dx, dy] = movementMap[static_cast<int>(f)];
+    auto [dx, dy] = movementMap[f];
     if (isValidPosition(px+dx, py+dy))
         player->setPos(px+dx, py+dy);
     player->setDir(f);

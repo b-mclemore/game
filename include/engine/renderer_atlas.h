@@ -45,8 +45,7 @@ protected:
     int cols = 16;
 
     // Render properties (size to display on screen)
-    int renderGlyphWidth = 32;
-    int renderGlyphHeight = 32;
+    int renderGlyphDim = 32;
 };
 
 #endif

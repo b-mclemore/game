@@ -6,9 +6,9 @@
 
 // Which direction the Character faces
 enum Facing {
-    N = 0, // default
+    N = 2,
     W = 1,
-    E = 2,
+    E = 0,
     S = 3
 };
 

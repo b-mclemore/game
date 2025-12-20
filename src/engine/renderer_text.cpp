@@ -49,11 +49,15 @@ void TextRenderer::drawText(const Texture2D& texture, const std::string& text, V
         drawSprite(
             texture,
             Vector2(x, position.y),
-            Vector2(renderGlyphWidth, renderGlyphHeight),
+            Vector2(renderGlyphDim, renderGlyphDim),
             0.0f,
             color
         );
 
-        x += renderGlyphWidth;
+        x += renderGlyphDim;
     }
+}
+
+void TextRenderer::setTextSize(int size) {
+    renderGlyphDim = size;
 }
