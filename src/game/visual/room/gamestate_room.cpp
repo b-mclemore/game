@@ -42,18 +42,19 @@ void GameStateRoom::load() {
 
     // Create map
     tileMap = std::make_unique<TileMap>(screenWidth / GRID_SIZE, screenHeight / GRID_SIZE);
-    tileMap->loadTileMap("assets/maps/tutorial.txt");
+    tileMap->loadTileMap("assets/maps/intro.txt");
 
     // Load npcs
-    npcs.push_back(Npc(InteractionType::Talk, "Are those ears real?", 12, 13));
-    npcs.push_back(Npc(InteractionType::Chess, "It's GAME TIME!", 17, 10));
+    npcs.push_back(Npc(InteractionType::Talk, "Are those ears real?", 2, 2));
+    npcs.push_back(Npc(InteractionType::Chess, "It's GAME TIME!", 9, 9));
     for (auto& c : npcs) {
         auto [x, y] = c.getPos();
         tileMap->setWalkability(x, y, false);
     }
 
     // Initialize player at center
-    player->setPos(15, 15);
+    player->setPos(6, 6);
+    player->setRenderPos(Vector2(6, 6));
 
     // Initialize camera
     cameraPos = calculateCameraPosition();
@@ -69,42 +70,41 @@ void GameStateRoom::resume() {
 }
 
 void GameStateRoom::handleEvent(const InputState& inputState) {
-    // movement is handled in update
-
     if (inputState.keyboardState.isJustPressed(SDL_SCANCODE_RETURN)) {
         // check if we're trying to interact with an npc
         auto [px, py] = player->getPos();
+        auto pdir = player->getDir();
         for (auto& c : npcs) {
-            if (c.isAdjacent(px, py)) {
-                interaction = c.interact(player->getDir());
+            // If the player is next to the npc and facing them when enter is pressed,
+            // an interaction occurs.
+            if (c.isAdjacent(px, py) && (c.getDir() == oppositeDir(pdir))) {
+                interaction = c.interact(pdir);
                 return;
             }
         }
     }
+
+    // handle movement
+    if (player->getIsMoving())
+        return;
+
+    // Start movement
+    if (inputState.keyboardState.isDown(SDL_Scancode(moveLeftKey))) {
+        tryStartMovePlayer(Facing::W);
+    }
+    else if (inputState.keyboardState.isDown(SDL_Scancode(moveRightKey))) {
+        tryStartMovePlayer(Facing::E);
+    }
+    else if (inputState.keyboardState.isDown(SDL_Scancode(moveUpKey))) {
+        tryStartMovePlayer(Facing::N);
+    }
+    else if (inputState.keyboardState.isDown(SDL_Scancode(moveDownKey))) {
+        tryStartMovePlayer(Facing::S);
+    }
 }
 
-bool GameStateRoom::movementJustPressed() {
-    const InputState& inputState = game->getInputManager()->getState();
-    return
-    (inputState.keyboardState.isJustPressed(SDL_Scancode(moveRightKey)) ||
-    inputState.keyboardState.isJustPressed(SDL_Scancode(moveLeftKey)) ||
-    inputState.keyboardState.isJustPressed(SDL_Scancode(moveUpKey)) ||
-    inputState.keyboardState.isJustPressed(SDL_Scancode(moveDownKey)));
-}
-
-// Simple boolean check that sees if any of the movekeys are isDown
-bool GameStateRoom::movementKeyDown() {
-    const InputState& inputState = game->getInputManager()->getState();
-    return
-    (inputState.keyboardState.isDown(SDL_Scancode(moveRightKey)) ||
-    inputState.keyboardState.isDown(SDL_Scancode(moveLeftKey)) ||
-    inputState.keyboardState.isDown(SDL_Scancode(moveUpKey)) ||
-    inputState.keyboardState.isDown(SDL_Scancode(moveDownKey)));
-}
-
-// Moves the player according to key
-void GameStateRoom::movePlayer(const InputState& inputState) {
-    auto [px, py] = player->getPos();
+// Gets the player direction according to key
+Facing GameStateRoom::getFacingFromKey(const InputState& inputState) {
     Facing f = Facing::N;
     if (inputState.keyboardState.isDown(SDL_Scancode(moveLeftKey)))
         f = Facing::W;
@@ -112,47 +112,62 @@ void GameStateRoom::movePlayer(const InputState& inputState) {
         f = Facing::E;
     else if (inputState.keyboardState.isDown(SDL_Scancode(moveDownKey)))
         f = Facing::S;
-    auto [dx, dy] = movementMap[f];
-    if (isValidPosition(px+dx, py+dy))
-        player->setPos(px+dx, py+dy);
-    player->setDir(f);
+    return f;
 }
 
-void GameStateRoom::update(unsigned int dt) {
-    // Get current input state
-    const InputState& inputState = game->getInputManager()->getState();
-    bool anyKeyPressed = movementKeyDown();
-    if (!anyKeyPressed) {
-        movementAccumulator = 0.0f;
-        player->setIsMoving(false);
-        player->setAnimFrame(AnimationFrame::noSwing);
+void GameStateRoom::tryStartMovePlayer(Facing dir) {
+    if (player->getIsMoving()) return;
+
+    auto [gx, gy] = player->getPos();
+    auto [dx, dy] = movementMap[dir];
+
+    if (!isValidPosition(gx + dx, gy + dy)) {
+        player->setDir(dir);
         return;
     }
 
-    // Store previous position to detect actual movement
-    auto [prevX, prevY] = player->getPos();
+    player->setDir(dir);
+    player->setIsMoving(true);
 
-    bool anyKeyJustPressed = movementJustPressed();
-    if (anyKeyJustPressed) {
-        // Handle justpressed key (meaning not held down, immediate movement)
-        movementAccumulator = 0.0f;
-        movePlayer(inputState);
-    }
-    else {
-        // If no instant movement, handle continuous movement for held keys
-        movementAccumulator += dt;
-        // Check if enough time has passed
-        if (movementAccumulator >= MOVEMENT_DELAY) {
-            movementAccumulator -= MOVEMENT_DELAY;
-            movePlayer(inputState);
-        }
-    }
+    player->setMoveFrom(Vector2(gx * GRID_SIZE, gy * GRID_SIZE));
+    player->setMoveTo(  Vector2((gx + dx) * GRID_SIZE,
+                               (gy + dy) * GRID_SIZE));
 
-    // Detect if player actually moved and update animation
-    auto [newX, newY] = player->getPos();
-    if (newX != prevX || newY != prevY) {
-        player->setIsMoving(true);
+    player->setMoveProgress(0.0f);
+    player->setHalfStepTriggered(false);
+}
+
+void GameStateRoom::update(unsigned int dt) {
+    if (!player->getIsMoving())
+        return;
+
+    // Advance movement
+    auto mp = player->getMoveProgress();
+    mp += dt / MOVEMENT_DELAY;
+    float t = std::min(mp, 1.0f);
+    player->setMoveProgress(mp);
+
+    // Interpolate render position
+    player->setRenderPos(
+        player->getMoveFrom() * (1.0f - t) +
+        player->getMoveTo()   * t);
+
+    // Half-tile animation trigger
+    if (!player->getHalfStepTriggered() && t >= 0.5f) {
         toggleAnimationFrame();
+        player->setHalfStepTriggered(true);
+    }
+
+    // Finish movement
+    if (t >= 1.0f) {
+        auto [gx, gy] = player->getPos();
+        auto [dx, dy] = movementMap[player->getDir()];
+
+        player->setPos(gx + dx, gy + dy);
+        player->setRenderPos(player->getMoveTo());
+
+        player->setIsMoving(false);
+        player->setAnimFrame(AnimationFrame::noSwing);
     }
 }
 
@@ -160,7 +175,8 @@ void GameStateRoom::draw() {
     // Map first
     drawMap();
     // Then players
-    drawCharacter(*player, ResourceManager::getTexture("gobrin"));
+    auto [px, py] = player->getRenderPos();
+    drawCharacter(*player, px, py, ResourceManager::getTexture("gobrin"));
     drawNpcs();
 }
 
@@ -190,11 +206,10 @@ Vector2 GameStateRoom::calculateCameraPosition() {
     return Vector2(camX, camY);
 }
 
-void GameStateRoom::drawCharacter(Character &p, const Texture2D &texture) {
-    auto [px, py] = p.getPos();
+void GameStateRoom::drawCharacter(Character &p, int px, int py, const Texture2D &texture) {
     // Player position relative to camera
-    float screenX = px * GRID_SIZE - cameraPos.x;
-    float screenY = py * GRID_SIZE - cameraPos.y;
+    float screenX = px - cameraPos.x;
+    float screenY = py - cameraPos.y;
     
     int row = static_cast<int>(p.getDir());
     int col = static_cast<int>(p.getAnimFrame());
@@ -274,7 +289,7 @@ void GameStateRoom::drawNpcs() {
         auto [x, y] = c.getPos();
         if ((x < startX || endX <= x) ||
             (y < startY || endY <= y)) continue;
-        drawCharacter(c, ResourceManager::getTexture("gnome"));
+        drawCharacter(c, x * GRID_SIZE, y * GRID_SIZE, ResourceManager::getTexture("gnome"));
     }
 }
 

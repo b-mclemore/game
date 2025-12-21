@@ -45,8 +45,10 @@ public:
     bool movementJustPressed();
     // Simple boolean check that sees if any of the movekeys are isDown
     bool movementKeyDown();
-    // Moves the player according to key
-    void movePlayer(const InputState& inputState);
+    // Gets the player direction according to key
+    Facing getFacingFromKey(const InputState& inputState);
+    
+    void tryStartMovePlayer(Facing f);
 
     std::optional<InteractionResult> interaction;
 
@@ -86,10 +88,9 @@ private:
     Vector2 cameraPos;
 
     // Movement timing
-    float movementAccumulator { 0.0f };
     static constexpr float MOVEMENT_DELAY = 250.0f;  // Milliseconds between moves
 
-    void drawCharacter(Character &p, const Texture2D &texture);
+    void drawCharacter(Character &p, int px, int py, const Texture2D &texture);
     void drawMap();
     void drawNpcs();
     bool isValidPosition(int x, int y);

@@ -32,11 +32,26 @@ public:
 	void setPos(int x, int y);
 	std::pair<int, int> getPos();
 
+	void setRenderPos(Vector2 pos);
+	Vector2 getRenderPos();
+
 	void setAnimFrame(AnimationFrame af);
 	AnimationFrame getAnimFrame();
 
 	void setIsMoving(bool moving);
 	bool getIsMoving();
+
+	void setMoveFrom(Vector2 v);
+	Vector2 getMoveFrom();
+
+	void setMoveTo(Vector2 v);
+	Vector2 getMoveTo();
+
+	void setMoveProgress(float f);
+	float getMoveProgress();
+
+	void setHalfStepTriggered(bool b);
+	bool getHalfStepTriggered();
 
 private:
 	// Movement state tracking
@@ -44,6 +59,12 @@ private:
 	bool isMoving = false;
 	int lastX = 0;
 	int lastY = 0;
+	Vector2 renderPos;
+	Vector2 moveFrom;
+	Vector2 moveTo;
+	float moveProgress; // [0, 1]
+	Facing moveDir;
+	bool halfStepTriggered;
 
 	// Animation state tracking
 	AnimationFrame animFrameColumn = AnimationFrame::noSwing;

@@ -26,6 +26,13 @@ std::pair<int, int> Character::getPos() {
 	return {lastX, lastY};
 }
 
+void Character::setRenderPos(Vector2 rp) {
+	renderPos = rp;
+}
+Vector2 Character::getRenderPos() {
+	return renderPos;
+}
+
 void Character::setAnimFrame(AnimationFrame af) {
 	animFrameColumn = af;
 }
@@ -37,7 +44,34 @@ AnimationFrame Character::getAnimFrame() {
 void Character::setIsMoving(bool moving) {
 	isMoving = moving;
 }
-
 bool Character::getIsMoving() {
 	return isMoving;
+}
+
+void Character::setMoveFrom(Vector2 v) {
+	moveFrom = v;
+}
+Vector2 Character::getMoveFrom() {
+	return moveFrom;
+}
+
+void Character::setMoveTo(Vector2 v) {
+	moveTo = v;
+}
+Vector2 Character::getMoveTo() {
+	return moveTo;
+}
+
+void Character::setMoveProgress(float f) {
+	moveProgress = f;
+}
+float Character::getMoveProgress() {
+	return moveProgress;
+}
+
+void Character::setHalfStepTriggered(bool b) {
+	halfStepTriggered = b;
+}
+bool Character::getHalfStepTriggered() {
+	return halfStepTriggered;
 }
