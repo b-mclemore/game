@@ -37,7 +37,7 @@ void GameStateRoom::load() {
     mapRenderer = std::make_shared<AtlasRenderer>(ResourceManager::getShader("atlas"));
     mapRenderer->setAtlasGlyphDims(32, 32);
     characterRenderer->setAtlasGlyphDims(16, 19);
-    characterRenderer->setRenderGlyphDims(32, 38);
+    characterRenderer->setRenderGlyphDims(64, 76);
     characterRenderer->setRowsCols(4, 3);
 
     // Create map
@@ -199,10 +199,11 @@ void GameStateRoom::drawCharacter(Character &p, const Texture2D &texture) {
     int row = static_cast<int>(p.getDir());
     int col = static_cast<int>(p.getAnimFrame());
     characterRenderer->setUV(row, col, texture);
+    auto [renderWidth, renderHeight] = characterRenderer->getRenderGlyphDims();
     characterRenderer->drawAtlasSprite(
         texture,
         Vector2(screenX, screenY),
-        Vector2(GRID_SIZE, GRID_SIZE)
+        Vector2(renderWidth, renderHeight)
     );
 }
 

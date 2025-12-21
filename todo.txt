@@ -36,8 +36,7 @@ roadmap
 [X] animate character moving
 [X] fix collision (maybe have a list or a second map)
 [X] make npc face character on interaction
-[X] handle npc rendering and player rendering with the same abstract fn -
-    lots of duplicated code there
+[X] handle npc rendering and player rendering with the same abstract fn
 [ ] better floor/wall textures
 [ ] floor/wall orientations - add sides/corners as a sprite atlas
 [ ] fix rendering - seems like sprites are being shrunk (player feet should be hidden behind npcs taller than 16 pxs)
@@ -54,6 +53,9 @@ screen should be split always
 left screen is game, right is "console" (text)
 tab between screens, pauses left on tab
 GameState classes for each game/minigame/etc
+
+on character interaction, switch to Textual. An empty return or tab will return to the visual. OR you can
+continue interacting with text commands
 
 ideas
 - almanac of allimac
