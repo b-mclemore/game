@@ -6,10 +6,12 @@
 
 enum class TileType {
     EMPTY = 0,
-    DIRT = 1,
-    COBBLE = 2,
-    NPC = 3
+    DIRT,
+    COBBLE,
+    GRASS0, GRASS1, GRASS2, GRASS3
 };
+
+bool passableTile(TileType tile);
 
 class TileMap {
 public:

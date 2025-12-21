@@ -3,6 +3,20 @@
 #include <stdexcept>
 #include <engine/log.h>
 #include <game/visual/room/tilemap.h>
+#include <random>
+
+bool passableTile(TileType tile) {
+    switch (tile) {
+        case TileType::DIRT:
+        case TileType::GRASS0:
+        case TileType::GRASS1:
+        case TileType::GRASS2:
+        case TileType::GRASS3:
+            return true;
+        default:
+            return false;
+    }
+}
 
 TileMap::TileMap(int width, int height)
     : width(width), height(height) {
@@ -56,6 +70,10 @@ void TileMap::loadTileMap(const std::string& file) {
 
     tiles.resize(width * height);
 
+    // randomness for random tiles
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dist(0, 3);
     // read rows
     for (int y = 0; y < height; ++y) {
         if (!std::getline(in, line))
@@ -73,13 +91,13 @@ void TileMap::loadTileMap(const std::string& file) {
                 );
             }
             TileType tile = static_cast<TileType>(value);
+            if (tile == TileType::GRASS0) {
+                int x = dist(gen);
+                tile = static_cast<TileType>(static_cast<int>(tile) + x);
+            }
             tiles[y * width + x] = tile;
             // for non-walkable tiles, set walkability to false
-            if (tile != TileType::DIRT) {
-                walkable[y * width + x] = false;
-            } else {
-                walkable[y * width + x] = true;
-            }
+            walkable[y * width + x] = passableTile(tile);
         }
     }
 }

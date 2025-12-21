@@ -26,15 +26,12 @@ void GameStateRoom::load() {
     moveDownKey = SDL_SCANCODE_S;
 
     // Load textures
-    ResourceManager::loadTexture("./assets/textures/goblin.png", "player");
-    ResourceManager::loadTexture("./assets/textures/goblin.png", "npc");
-    ResourceManager::loadTexture("./assets/textures/cobble.png", "cobble");
-    ResourceManager::loadTexture("./assets/textures/dirtflat.png", "dirt");
-    ResourceManager::loadTexture("./assets/textures/empty.png", "empty");
-    ResourceManager::loadTexture("./assets/textures/gobrin.png", "goblin_moving");
-    ResourceManager::getTexture("goblin_moving").setFiltering(GL_NEAREST, GL_NEAREST);
-    ResourceManager::loadTexture("./assets/textures/gnomes.png", "gnome_npc");
-    ResourceManager::getTexture("gnome_npc").setFiltering(GL_NEAREST, GL_NEAREST);
+    for (auto& s : {
+        "cobble", "dirt", "empty", "gobrin", "gnome"
+    }) {
+        ResourceManager::loadTexture(std::string("./assets/textures/")+s+std::string(".png"), s);
+        ResourceManager::getTexture(s).setFiltering(GL_NEAREST, GL_NEAREST);
+    }
 
     characterRenderer = std::make_shared<AtlasRenderer>(ResourceManager::getShader("atlas"));
     mapRenderer = std::make_shared<AtlasRenderer>(ResourceManager::getShader("atlas"));
@@ -160,8 +157,10 @@ void GameStateRoom::update(unsigned int dt) {
 }
 
 void GameStateRoom::draw() {
+    // Map first
     drawMap();
-    drawPlayer();
+    // Then players
+    drawCharacter(*player, ResourceManager::getTexture("gobrin"));
     drawNpcs();
 }
 
@@ -191,17 +190,17 @@ Vector2 GameStateRoom::calculateCameraPosition() {
     return Vector2(camX, camY);
 }
 
-void GameStateRoom::drawPlayer() {
-    auto [px, py] = player->getPos();
+void GameStateRoom::drawCharacter(Character &p, const Texture2D &texture) {
+    auto [px, py] = p.getPos();
     // Player position relative to camera
     float screenX = px * GRID_SIZE - cameraPos.x;
     float screenY = py * GRID_SIZE - cameraPos.y;
     
-    int row = static_cast<int>(player->getDir());
-    int col = static_cast<int>(player->getAnimFrame());
-    characterRenderer->setUV(row, col, ResourceManager::getTexture("goblin_moving"));
+    int row = static_cast<int>(p.getDir());
+    int col = static_cast<int>(p.getAnimFrame());
+    characterRenderer->setUV(row, col, texture);
     characterRenderer->drawAtlasSprite(
-        ResourceManager::getTexture("goblin_moving"),
+        texture,
         Vector2(screenX, screenY),
         Vector2(GRID_SIZE, GRID_SIZE)
     );
@@ -274,17 +273,7 @@ void GameStateRoom::drawNpcs() {
         auto [x, y] = c.getPos();
         if ((x < startX || endX <= x) ||
             (y < startY || endY <= y)) continue;
-        const Texture2D& npcTex = ResourceManager::getTexture("gnome_npc");
-        int row = static_cast<int>(c.getDir());
-        int col = static_cast<int>(c.getAnimFrame());
-        characterRenderer->setUV(row, row, npcTex);
-        float screenX = x * GRID_SIZE - cameraPos.x;
-        float screenY = y * GRID_SIZE - cameraPos.y;
-        characterRenderer->drawAtlasSprite(
-            npcTex,
-            Vector2(screenX, screenY),
-            Vector2(GRID_SIZE, GRID_SIZE)
-        );
+        drawCharacter(c, ResourceManager::getTexture("gnome"));
     }
 }
 

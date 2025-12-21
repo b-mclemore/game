@@ -89,7 +89,7 @@ private:
     float movementAccumulator { 0.0f };
     static constexpr float MOVEMENT_DELAY = 250.0f;  // Milliseconds between moves
 
-    void drawPlayer();
+    void drawCharacter(Character &p, const Texture2D &texture);
     void drawMap();
     void drawNpcs();
     bool isValidPosition(int x, int y);

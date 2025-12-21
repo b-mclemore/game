@@ -36,11 +36,13 @@ roadmap
 [X] animate character moving
 [X] fix collision (maybe have a list or a second map)
 [X] make npc face character on interaction
-[ ] handle npc rendering and player rendering with the same abstract fn -
+[X] handle npc rendering and player rendering with the same abstract fn -
     lots of duplicated code there
 [ ] better floor/wall textures
 [ ] floor/wall orientations - add sides/corners as a sprite atlas
 [ ] fix rendering - seems like sprites are being shrunk (player feet should be hidden behind npcs taller than 16 pxs)
+[ ] don't use random noise for tile generation, use smarter map storage
+[ ] rework map renderer, abstract more things (e.g. tiletype switching)
 
 [ ] handle up arrow on console
 [ ] empty command "" after interacting w/ character should switch context back
