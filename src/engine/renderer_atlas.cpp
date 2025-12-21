@@ -9,12 +9,22 @@ std::pair<int, int> AtlasRenderer::getRowsCols() {
     return {rows, cols};
 }
 
-void AtlasRenderer::setGlyphDim(int gd) {
-    atlasGlyphDim = gd;
+void AtlasRenderer::setAtlasGlyphDims(int w, int h) {
+    atlasGlyphWidth = w;
+    atlasGlyphHeight = h;
 }
 
-int AtlasRenderer::getGlyphDim() {
-    return atlasGlyphDim;
+std::pair<int, int> AtlasRenderer::getAtlasGlyphDims() {
+    return {atlasGlyphWidth, atlasGlyphHeight};
+}
+
+void AtlasRenderer::setRenderGlyphDims(int w, int h) {
+    renderGlyphWidth = w;
+    renderGlyphHeight = h;
+}
+
+std::pair<int, int> AtlasRenderer::getRenderGlyphDims() {
+    return {renderGlyphWidth, renderGlyphHeight};
 }
 
 static std::array<GLfloat, 18> vertexBuffer = {
@@ -87,10 +97,10 @@ void AtlasRenderer::setUV(int row, int col, const Texture2D& texture) {
 	shader.use();
 
 	// Use atlas dimensions for UV calculation
-	float u0 = (col * atlasGlyphDim) / (float)texture.width;
-	float v0 = (row * atlasGlyphDim) / (float)texture.height;
-	float u1 = u0 + atlasGlyphDim / (float)texture.width;
-	float v1 = v0 + atlasGlyphDim / (float)texture.height;
+	float u0 = (col * atlasGlyphWidth) / (float)texture.width;
+	float v0 = (row * atlasGlyphHeight) / (float)texture.height;
+	float u1 = u0 + atlasGlyphWidth / (float)texture.width;
+	float v1 = v0 + atlasGlyphHeight / (float)texture.height;
 
 	shader.setVector4f("uvRect", Vector4(u0, v0, u1, v1));
 }

@@ -32,20 +32,23 @@ void GameStateRoom::load() {
     ResourceManager::loadTexture("./assets/textures/dirtflat.png", "dirt");
     ResourceManager::loadTexture("./assets/textures/empty.png", "empty");
     ResourceManager::loadTexture("./assets/textures/gobrin.png", "goblin_moving");
-
-    playerRenderer = std::make_shared<AtlasRenderer>(ResourceManager::getShader("atlas"));
-    mapRenderer = std::make_shared<AtlasRenderer>(ResourceManager::getShader("atlas"));
-    mapRenderer->setGlyphDim(32);
-    playerRenderer->setGlyphDim(16);
-    playerRenderer->setRowsCols(4, 3);
     ResourceManager::getTexture("goblin_moving").setFiltering(GL_NEAREST, GL_NEAREST);
+    ResourceManager::loadTexture("./assets/textures/gnomes.png", "gnome_npc");
+    ResourceManager::getTexture("gnome_npc").setFiltering(GL_NEAREST, GL_NEAREST);
+
+    characterRenderer = std::make_shared<AtlasRenderer>(ResourceManager::getShader("atlas"));
+    mapRenderer = std::make_shared<AtlasRenderer>(ResourceManager::getShader("atlas"));
+    mapRenderer->setAtlasGlyphDims(32, 32);
+    characterRenderer->setAtlasGlyphDims(16, 19);
+    characterRenderer->setRenderGlyphDims(32, 38);
+    characterRenderer->setRowsCols(4, 3);
 
     // Create map
     tileMap = std::make_unique<TileMap>(screenWidth / GRID_SIZE, screenHeight / GRID_SIZE);
     tileMap->loadTileMap("assets/maps/tutorial.txt");
 
     // Load npcs
-    npcs.push_back(Npc(InteractionType::Talk, "The goblin screeches\n'Welcome to CYBER-SPACE!!'", 12, 13));
+    npcs.push_back(Npc(InteractionType::Talk, "Are those ears real?", 12, 13));
     npcs.push_back(Npc(InteractionType::Chess, "It's GAME TIME!", 17, 10));
 
     // Initialize player at center
@@ -192,8 +195,8 @@ void GameStateRoom::drawPlayer() {
     
     int row = static_cast<int>(player->getDir());
     int col = static_cast<int>(player->getAnimFrame());
-    playerRenderer->setUV(row, col, ResourceManager::getTexture("goblin_moving"));
-    playerRenderer->drawAtlasSprite(
+    characterRenderer->setUV(row, col, ResourceManager::getTexture("goblin_moving"));
+    characterRenderer->drawAtlasSprite(
         ResourceManager::getTexture("goblin_moving"),
         Vector2(screenX, screenY),
         Vector2(GRID_SIZE, GRID_SIZE)
@@ -267,11 +270,13 @@ void GameStateRoom::drawNpcs() {
         auto [x, y] = c.getPos();
         if ((x < startX || endX <= x) ||
             (y < startY || endY <= y)) continue;
-        const Texture2D& npcTex = ResourceManager::getTexture("npc");
-        mapRenderer->setUV(0, 0, npcTex);
+        const Texture2D& npcTex = ResourceManager::getTexture("gnome_npc");
+        int row = static_cast<int>(c.getDir());
+        int col = static_cast<int>(c.getAnimFrame());
+        characterRenderer->setUV(row, row, npcTex);
         float screenX = x * GRID_SIZE - cameraPos.x;
         float screenY = y * GRID_SIZE - cameraPos.y;
-        mapRenderer->drawAtlasSprite(
+        characterRenderer->drawAtlasSprite(
             npcTex,
             Vector2(screenX, screenY),
             Vector2(GRID_SIZE, GRID_SIZE)

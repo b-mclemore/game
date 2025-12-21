@@ -69,7 +69,7 @@ private:
     std::vector<Npc> npcs = std::vector<Npc>();
 
     // renderer for character
-    std::shared_ptr<AtlasRenderer> playerRenderer;
+    std::shared_ptr<AtlasRenderer> characterRenderer;
 
     // renderer for map
     std::shared_ptr<AtlasRenderer> mapRenderer;

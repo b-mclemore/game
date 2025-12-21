@@ -38,10 +38,10 @@ void TextRenderer::drawText(const Texture2D& texture, const std::string& text, V
         int col = coords.second;
 
         // Use atlas dimensions for UV calculation
-        float u0 = (col * atlasGlyphDim) / (float)texture.width;
-        float v0 = (row * atlasGlyphDim) / (float)texture.height;
-        float u1 = u0 + atlasGlyphDim / (float)texture.width;
-        float v1 = v0 + atlasGlyphDim / (float)texture.height;
+        float u0 = (col * atlasGlyphWidth) / (float)texture.width;
+        float v0 = (row * atlasGlyphHeight) / (float)texture.height;
+        float u1 = u0 + atlasGlyphWidth / (float)texture.width;
+        float v1 = v0 + atlasGlyphHeight / (float)texture.height;
 
         shader.setVector4f("uvRect", Vector4(u0, v0, u1, v1));
 
@@ -49,15 +49,16 @@ void TextRenderer::drawText(const Texture2D& texture, const std::string& text, V
         drawSprite(
             texture,
             Vector2(x, position.y),
-            Vector2(renderGlyphDim, renderGlyphDim),
+            Vector2(renderGlyphWidth, renderGlyphHeight),
             0.0f,
             color
         );
 
-        x += renderGlyphDim;
+        x += renderGlyphWidth;
     }
 }
 
 void TextRenderer::setTextSize(int size) {
-    renderGlyphDim = size;
+    renderGlyphWidth = size;
+    renderGlyphHeight = size;
 }
