@@ -17,7 +17,9 @@ public:
 
     void setTile(int x, int y, TileType type);
     TileType getTile(int x, int y) const;
+
     bool isWalkable(int x, int y) const;
+    void setWalkability(int x, int y, bool isWalkable);
     bool isInBounds(int x, int y) const;
 
     int getWidth() const { return width; }
@@ -29,6 +31,7 @@ private:
     int width;
     int height;
     std::vector<TileType> tiles;
+    std::vector<bool> walkable;
 };
 
 #endif

@@ -1,5 +1,14 @@
 #include <game/visual/room/character.h>
 
+Facing oppositeDir(Facing f) {
+	switch (f) {
+		case Facing::N: return Facing::S;
+		case Facing::S: return Facing::N;
+		case Facing::E: return Facing::W;
+		default: return Facing::E;
+	}
+}
+
 Facing Character::getDir() {
 	return dir;
 }

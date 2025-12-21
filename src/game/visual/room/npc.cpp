@@ -8,7 +8,9 @@ Npc::Npc(InteractionType typ, const std::string& d, int x, int y) {
 
 // Room for creativity here. Could use the npc class to construct
 // "[The (type)] or [Name] [verbs] '[dialog]'"
-InteractionResult Npc::interact() const {
+InteractionResult Npc::interact(Facing f) {
+    // point towards player
+    setDir(oppositeDir(f));
     // only one type of minigame right now
     if (opensMinigame) {
         return { InteractionType::Chess, dialog };

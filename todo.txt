@@ -34,13 +34,13 @@ roadmap
 [ ] chess puzzle gamestate class -> draw board, read fen, handle gameover
 
 [X] animate character moving
-[ ] fix collision (maybe have a list or a second map)
-[ ] make npc face character on interaction
+[X] fix collision (maybe have a list or a second map)
+[X] make npc face character on interaction
 [ ] handle npc rendering and player rendering with the same abstract fn -
     lots of duplicated code there
 [ ] better floor/wall textures
 [ ] floor/wall orientations - add sides/corners as a sprite atlas
-[ ] FIX MAP TO NOT RENDER PARTIAL TILES
+[ ] fix rendering - seems like sprites are being shrunk (player feet should be hidden behind npcs taller than 16 pxs)
 
 [ ] handle up arrow on console
 [ ] empty command "" after interacting w/ character should switch context back

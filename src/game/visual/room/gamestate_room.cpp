@@ -50,6 +50,10 @@ void GameStateRoom::load() {
     // Load npcs
     npcs.push_back(Npc(InteractionType::Talk, "Are those ears real?", 12, 13));
     npcs.push_back(Npc(InteractionType::Chess, "It's GAME TIME!", 17, 10));
+    for (auto& c : npcs) {
+        auto [x, y] = c.getPos();
+        tileMap->setWalkability(x, y, false);
+    }
 
     // Initialize player at center
     player->setPos(15, 15);
@@ -75,7 +79,7 @@ void GameStateRoom::handleEvent(const InputState& inputState) {
         auto [px, py] = player->getPos();
         for (auto& c : npcs) {
             if (c.isAdjacent(px, py)) {
-                interaction = c.interact();
+                interaction = c.interact(player->getDir());
                 return;
             }
         }

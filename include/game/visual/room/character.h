@@ -12,6 +12,8 @@ enum Facing {
     S = 3
 };
 
+Facing oppositeDir(Facing f);
+
 // which frame of animation
 // matches the column in the sprite atlas for the Character
 enum AnimationFrame {

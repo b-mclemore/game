@@ -7,6 +7,7 @@
 TileMap::TileMap(int width, int height)
     : width(width), height(height) {
     tiles.resize(width * height, TileType::EMPTY);
+    walkable.resize(width * height, true);
 }
 
 void TileMap::setTile(int x, int y, TileType type) {
@@ -22,12 +23,15 @@ TileType TileMap::getTile(int x, int y) const {
     return TileType::EMPTY;
 }
 
+void TileMap::setWalkability(int x, int y, bool walkability) {
+    walkable[y * width + x] = walkability;
+}
+
 bool TileMap::isWalkable(int x, int y) const {
     if (!isInBounds(x, y)) {
         return false;
     }
-    TileType tile = getTile(x, y);
-    return tile == TileType::DIRT;
+    return walkable[y * width + x];
 }
 
 bool TileMap::isInBounds(int x, int y) const {
@@ -68,7 +72,14 @@ void TileMap::loadTileMap(const std::string& file) {
                     std::to_string(y) + ")"
                 );
             }
-            tiles[y * width + x] = static_cast<TileType>(value);
+            TileType tile = static_cast<TileType>(value);
+            tiles[y * width + x] = tile;
+            // for non-walkable tiles, set walkability to false
+            if (tile != TileType::DIRT) {
+                walkable[y * width + x] = false;
+            } else {
+                walkable[y * width + x] = true;
+            }
         }
     }
 }
