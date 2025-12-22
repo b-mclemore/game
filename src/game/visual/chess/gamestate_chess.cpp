@@ -3,9 +3,8 @@
 #include <game/game.h>
 #include <engine/log.h>
 
-GameStateChess::GameStateChess(
-        std::shared_ptr<AtlasRenderer> _aRenderer
-) : mapRenderer(std::move(_aRenderer)) {
+GameStateChess::GameStateChess() {
+    renderer = std::make_shared<BoardRenderer>(ResourceManager::getShader("atlas"));
 }
 
 GameStateChess::~GameStateChess() {
@@ -17,9 +16,18 @@ void GameStateChess::setGame(IGame* _game) {
 
 void GameStateChess::load() {
     screenWidth = game->windowWidth / 2;
-    screenHeight = game->windowHeight;
+    screenHeight = game->windowHeight;    
 
-    
+    renderer->setAtlasGlyphDims(16, 16);
+    renderer->setRenderGlyphDims(64, 64);
+
+    chuzz.loadFromFile("./assets/chuzz/test.txt");
+
+    ResourceManager::loadTexture("./assets/textures/pieces.png", "pieces");
+    ResourceManager::getTexture("pieces").setFiltering(GL_NEAREST, GL_NEAREST);
+    ResourceManager::loadTexture("./assets/textures/squares.png", "squares");
+    ResourceManager::getTexture("squares").setFiltering(GL_NEAREST, GL_NEAREST);
+    renderer->loadTextures();
 }
 
 void GameStateChess::clean() {
@@ -33,6 +41,9 @@ void GameStateChess::resume() {
 
 void GameStateChess::handleEvent(const InputState& inputState) {
     
+    
+    // Set interaction when game is over
+    // interaction = { ChessEnding::Lose, "YOU LOSE!" };
 }
 
 void GameStateChess::update(unsigned int dt) {
@@ -40,11 +51,8 @@ void GameStateChess::update(unsigned int dt) {
 }
 
 void GameStateChess::draw() {
-    // No chess logic yet, immediately quit
-    interaction = { ChessEnding::Quit, "Sorry, this hasn't\nbeen implemented" };
+    renderer->drawBoard(chuzz.getBoardState(), screenWidth / 2, screenHeight / 2);
 }
-
-
 
 void GameStateChess::onResize(int newWidth, int newHeight) {
     screenWidth = newWidth;

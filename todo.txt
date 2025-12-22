@@ -31,23 +31,24 @@ roadmap
     e.g. checking if Visual or Chess in draw, update, handle, etc)
 [X] abstract the rendering more from the gamestate_visual class (drawPlayer, drawMap, etc)
 [X] simplify movement handling, create new fn
-[ ] chess puzzle gamestate class -> draw board, read fen, handle gameover
+[X] chess puzzle gamestate class -> draw board, read fen
+[ ] add movelist
+[ ] add console interaction
+[ ] add move animation (skip handleInput while animating)
+[ ] handle correct/incorrect moves
 
 [X] animate character moving
 [X] fix collision (maybe have a list or a second map)
 [X] make npc face character on interaction
 [X] handle npc rendering and player rendering with the same abstract fn
-[ ] better floor/wall textures
+[X] better floor/wall textures
+[X] fix rendering - seems like sprites are being shrunk (player feet should be hidden behind npcs taller than 16 pxs)
 [ ] floor/wall orientations - add sides/corners as a sprite atlas
-[ ] fix rendering - seems like sprites are being shrunk (player feet should be hidden behind npcs taller than 16 pxs)
-[ ] don't use random noise for tile generation, use smarter map storage
 [ ] rework map renderer, abstract more things (e.g. tiletype switching)
 
 [ ] handle up arrow on console
 [ ] empty command "" after interacting w/ character should switch context back
-[ ] rework rendering to use a single renderer with global grid to handle resizing?
-    can use sprite atlas of 8x8 sprites
-[ ] maths speedups?
+[ ] add mouse controls for chess
 
 screen should be split always
 left screen is game, right is "console" (text)

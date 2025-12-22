@@ -1,0 +1,1 @@
+The code for the chess engine is taken in large part from my Aldan engine, written in C.

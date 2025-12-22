@@ -23,7 +23,7 @@ public:
     // Takes the direction of the player so that the npc can change which direction
     // it faces
     InteractionResult interact(Facing f);
-    bool isAdjacent(int x, int y);
+    bool isAdjacentAndFacing(int x, int y, Facing f);
 
 private:
     std::string dialog;

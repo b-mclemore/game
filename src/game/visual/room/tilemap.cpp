@@ -8,10 +8,6 @@
 bool passableTile(TileType tile) {
     switch (tile) {
         case TileType::DIRT:
-        case TileType::GRASS0:
-        case TileType::GRASS1:
-        case TileType::GRASS2:
-        case TileType::GRASS3:
             return true;
         default:
             return false;
@@ -91,10 +87,6 @@ void TileMap::loadTileMap(const std::string& file) {
                 );
             }
             TileType tile = static_cast<TileType>(value);
-            if (tile == TileType::GRASS0) {
-                int x = dist(gen);
-                tile = static_cast<TileType>(static_cast<int>(tile) + x);
-            }
             tiles[y * width + x] = tile;
             // for non-walkable tiles, set walkability to false
             walkable[y * width + x] = passableTile(tile);

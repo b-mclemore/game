@@ -27,7 +27,7 @@ void GameStateRoom::load() {
 
     // Load textures
     for (auto& s : {
-        "cobble", "dirt", "empty", "gobrin", "gnome"
+        "cobble", "dirt", "empty", "gobrin", "gnome", "tree", "camilla"
     }) {
         ResourceManager::loadTexture(std::string("./assets/textures/")+s+std::string(".png"), s);
         ResourceManager::getTexture(s).setFiltering(GL_NEAREST, GL_NEAREST);
@@ -35,7 +35,8 @@ void GameStateRoom::load() {
 
     characterRenderer = std::make_shared<AtlasRenderer>(ResourceManager::getShader("atlas"));
     mapRenderer = std::make_shared<AtlasRenderer>(ResourceManager::getShader("atlas"));
-    mapRenderer->setAtlasGlyphDims(32, 32);
+    mapRenderer->setAtlasGlyphDims(16, 16);
+    mapRenderer->setRenderGlyphDims(64, 64);
     characterRenderer->setAtlasGlyphDims(16, 19);
     characterRenderer->setRenderGlyphDims(64, 76);
     characterRenderer->setRowsCols(4, 3);
@@ -45,8 +46,8 @@ void GameStateRoom::load() {
     tileMap->loadTileMap("assets/maps/intro.txt");
 
     // Load npcs
-    npcs.push_back(Npc(InteractionType::Talk, "Are those ears real?", 2, 2));
-    npcs.push_back(Npc(InteractionType::Chess, "It's GAME TIME!", 9, 9));
+    npcs.push_back(Npc(InteractionType::Chess, "It's PUZZLE TIME!\nSolve the puzzle with a move\nlike 'e2e4'.", 3, 3));
+    npcs.push_back(Npc(InteractionType::Talk, "Hmm? Me? I'm a gnome.", 9, 9));
     for (auto& c : npcs) {
         auto [x, y] = c.getPos();
         tileMap->setWalkability(x, y, false);
@@ -54,7 +55,7 @@ void GameStateRoom::load() {
 
     // Initialize player at center
     player->setPos(6, 6);
-    player->setRenderPos(Vector2(6, 6));
+    player->setRenderPos(Vector2(6 * GRID_SIZE, 6 * GRID_SIZE));
 
     // Initialize camera
     cameraPos = calculateCameraPosition();
@@ -77,7 +78,7 @@ void GameStateRoom::handleEvent(const InputState& inputState) {
         for (auto& c : npcs) {
             // If the player is next to the npc and facing them when enter is pressed,
             // an interaction occurs.
-            if (c.isAdjacent(px, py) && (c.getDir() == oppositeDir(pdir))) {
+            if (c.isAdjacentAndFacing(px, py, pdir)) {
                 interaction = c.interact(pdir);
                 return;
             }
@@ -242,6 +243,7 @@ void GameStateRoom::drawMap() {
     const Texture2D& emptyTex = ResourceManager::getTexture("empty");
     const Texture2D& dirtTex = ResourceManager::getTexture("dirt");
     const Texture2D& cobbleTex = ResourceManager::getTexture("cobble");
+    const Texture2D& treeTex = ResourceManager::getTexture("tree");
 
     // Render visible tiles
     for (int y = startY; y < endY; y++) {
@@ -258,10 +260,17 @@ void GameStateRoom::drawMap() {
                 case TileType::EMPTY:  tex = &emptyTex; break;
                 case TileType::DIRT:   tex = &dirtTex; break;
                 case TileType::COBBLE: tex = &cobbleTex; break;
+                case TileType::TREE: tex = &treeTex; break;
             }
 
             if (tex) {
                 mapRenderer->setUV(0, 0, *tex);
+                // TEMPORARY
+                if (tile == TileType::DIRT) {
+                    mapRenderer->setUV(y % 4, x % 4, *tex);
+                } else if (tile == TileType::TREE) {
+                    mapRenderer->setUV((y % 2), x % 2, *tex);
+                }
                 mapRenderer->drawAtlasSprite(
                     *tex,
                     Vector2(screenX, screenY),

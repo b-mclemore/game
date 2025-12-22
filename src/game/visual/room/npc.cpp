@@ -19,8 +19,12 @@ InteractionResult Npc::interact(Facing f) {
 }
 
 // Used to check if (player) coords are adjacent to the npc
-bool Npc::isAdjacent(int px, int py) {
+// and facing them
+bool Npc::isAdjacentAndFacing(int px, int py, Facing f) {
     auto [cx, cy] = getPos();
-    return ((cx == px && (cy-1 == py || cy+1 == py)) ||
-        (cy == py && (cx-1 == px || cx+1 == px)));
+    return (
+        (cx == px-1 && cy == py && f == Facing::W) ||
+        (cx == px+1 && cy == py && f == Facing::E) ||
+        (cx == px && cy == py-1 && f == Facing::S) ||
+        (cx == px && cy == py+1 && f == Facing::N));
 }

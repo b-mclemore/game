@@ -5,6 +5,8 @@
 #include <optional>
 #include <engine/gamestate.h>
 #include <game/game.h>
+#include <game/visual/chess/chesspuzzle.h>
+#include <game/visual/chess/renderer_board.h>
 
 enum class ChessEnding {
     Win,
@@ -21,13 +23,9 @@ struct ChessResult {
 // chess minigame
 class GameStateChess : public GameState {
 public:
-    GameStateChess(
-            std::shared_ptr<AtlasRenderer>
-    );
+    GameStateChess();
 
     ~GameStateChess() override;
-
-    GameStateChess() = delete;
 
     void load() override;
 
@@ -52,8 +50,8 @@ public:
     std::optional<ChessResult> interaction;
 
 private:
-    // renderer for map
-    std::shared_ptr<AtlasRenderer> mapRenderer;
+    // renderer for board and pieces
+    std::shared_ptr<BoardRenderer> renderer;
 
     Game* game { nullptr };
     int screenWidth { 0 };
@@ -61,6 +59,9 @@ private:
 
     // Grid settings
     static constexpr int GRID_SIZE = 64;  // Size of each grid cell in pixels
+
+    // puzzle logic/state
+    ChessPuzzle chuzz;
 };
 
 #endif

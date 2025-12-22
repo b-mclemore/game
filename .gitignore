@@ -22,3 +22,6 @@ cmake-build-*
 
 # External libraries
 external/
+
+# Gimp assets
+*.xcf

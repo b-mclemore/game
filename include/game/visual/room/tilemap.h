@@ -8,7 +8,7 @@ enum class TileType {
     EMPTY = 0,
     DIRT,
     COBBLE,
-    GRASS0, GRASS1, GRASS2, GRASS3
+    TREE
 };
 
 bool passableTile(TileType tile);

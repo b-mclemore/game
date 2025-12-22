@@ -6,7 +6,7 @@
 GameStateVisual::GameStateVisual(
         std::shared_ptr<AtlasRenderer> _aRenderer
 ) : renderer(std::move(_aRenderer)) {
-    ch = new GameStateChess(_aRenderer);
+    ch = new GameStateChess();
     room = new GameStateRoom(_aRenderer);
 }
 

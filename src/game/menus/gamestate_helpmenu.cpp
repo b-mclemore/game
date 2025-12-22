@@ -30,8 +30,7 @@ void GameStateHelpMenu::draw() {
     Color textColor = Color(255, 255, 0, 255);  // yellow
 
     std::vector<std::string> lines = {
-        "Abandon all hope",
-        "Ye who enter here",
+        "Enter 'h' in the game for help",
         "",
         "(Press ESC to go back)"
     };
