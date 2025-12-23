@@ -12,7 +12,8 @@ enum class ChessEnding {
     Win,
     Loss,
     Draw,
-    Quit
+    Quit,
+    ContinuePlaying
 };
 
 struct ChessResult {
@@ -48,6 +49,8 @@ public:
     bool isGameOver();
 
     std::optional<ChessResult> interaction;
+
+    void handleCommand(std::string command);
 
 private:
     // renderer for board and pieces

@@ -32,10 +32,10 @@ roadmap
 [X] abstract the rendering more from the gamestate_visual class (drawPlayer, drawMap, etc)
 [X] simplify movement handling, create new fn
 [X] chess puzzle gamestate class -> draw board, read fen
-[ ] add movelist
-[ ] add console interaction
+[X] add movelist
+[X] add console interaction
+[X] handle correct/incorrect moves
 [ ] add move animation (skip handleInput while animating)
-[ ] handle correct/incorrect moves
 
 [X] animate character moving
 [X] fix collision (maybe have a list or a second map)
@@ -48,6 +48,8 @@ roadmap
 
 [ ] handle up arrow on console
 [ ] empty command "" after interacting w/ character should switch context back
+[ ] rm duplicate code
+[ ] sprite batching
 [ ] add mouse controls for chess
 
 screen should be split always

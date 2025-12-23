@@ -15,7 +15,7 @@ void BoardRenderer::drawBoard(const BoardState& bs, int centerX, int centerY) {
 	auto texture = squareTex;
 	for (int i = 0; i < 8; ++i) {
 		for (int j = 0; j < 8; ++j) {
-			setUV(0, (i + j) % 2, texture);
+			setUV(0, 1 - ((i + j) % 2), texture);
 			drawAtlasSprite(
 				texture,
 				Vector2(x, y),

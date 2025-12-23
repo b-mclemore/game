@@ -52,9 +52,16 @@ void GameStateTextual::handleEvent(const InputState& inputState) {
     }
     // otherwise, ASCII if possible
     else {
+        // alphabet
         for (int sc = 4; sc < 29; sc++) {
             if (inputState.keyboardState.isJustPressed((SDL_Scancode)sc)) {
                 cbuff->addChar((char)(sc + 93));
+            }
+        }
+        // numeric
+        for (int sc = 29; sc < 39; sc++) {
+            if (inputState.keyboardState.isJustPressed((SDL_Scancode)sc)) {
+                cbuff->addChar((char)(sc + 19));
             }
         }
     }
@@ -105,8 +112,8 @@ std::string cleanUpCommand(const std::string& command) {
     return command.substr(first, last - first + 1);
 }
 
-void GameStateTextual::handleCommand(const std::string& command) {
-    auto c = cleanUpCommand(command);
+void GameStateTextual::handleCommand(const std::string& com) {
+    auto c = cleanUpCommand(com);
     if (c == "quit" || c == "q") {
         game->gameIsRunning = false;
     } 
@@ -120,5 +127,9 @@ void GameStateTextual::handleCommand(const std::string& command) {
             "Enter 'q' to quit.", sourceEnum::genericSource);
     } else if (c == "activate") {
         cbuff->addLine("SYSTEM ACTIVATED!!!", sourceEnum::genericSource);
+    } else {
+        // if not recognized, try sending as a command to vis.
+        // if vis doesn't recognize it, it will silently do nothing
+        command = c;
     }
 }

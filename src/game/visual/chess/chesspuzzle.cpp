@@ -3,9 +3,24 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <sstream>
 
 const BoardState& ChessPuzzle::getBoardState() {
     return bbs;
+}
+
+std::string ChessPuzzle::getNextMove() {
+    return moveToString(moveList[currMoveIdx]);
+}
+
+void ChessPuzzle::loadMoves(std::string moves) {
+    std::istringstream iss(moves);
+    std::string curr_move;
+
+    while (iss >> curr_move) {
+        Move m = stringToMove(curr_move);
+        moveList.push_back(m);
+    }
 }
 
 void ChessPuzzle::loadFromFile(std::string path) {
@@ -20,7 +35,8 @@ void ChessPuzzle::loadFromFile(std::string path) {
     std::getline(file, fen);
     std::getline(file, moves);
 
+    // load pieces onto board
     bbs.loadFromFen(fen);
-	// TODO
-	// movelist.loadFromString(moves);
+    // load correct moves into memory
+	loadMoves(moves);
 }

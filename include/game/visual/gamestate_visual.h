@@ -42,7 +42,11 @@ public:
 
     void onResize(int newWidth, int newHeight) override;
 
+    // if we want to send a dialog to be printed, set it here
     std::optional<std::string> dialog;
+
+    // if the console wants to send a command to be received
+    void handleCommand(std::string command);
 
 private:
     std::shared_ptr<AtlasRenderer> renderer;

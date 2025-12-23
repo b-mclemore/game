@@ -56,23 +56,28 @@ void GameStateMain::handleEvent(const InputState& inputState) {
     }
     else if (isVisToggled) {
         vis->handleEvent(inputState);
-        // if vis decides to print to console, catch and add the message,
-        // then toggle
-        if (vis->dialog) {
-            auto result = *vis->dialog;
-            vis->dialog.reset();
-            txt->addLine(result, sourceEnum::npcSource);
-        }
     } else {
         txt->handleEvent(inputState);
     }
 }
 
 void GameStateMain::update(unsigned int dt) {
-    if (isVisToggled) {
-        vis->update(dt);
-    } else {
-        txt->update(dt);
+    vis->update(dt);
+    txt->update(dt);
+    
+    // if vis decides to print to console, catch and add the message,
+    // then toggle
+    if (vis->dialog) {
+        auto result = *vis->dialog;
+        vis->dialog.reset();
+        txt->addLine(result, sourceEnum::npcSource);
+    }
+    // if txt wants to send a command, catch and send the string
+    // to vis, but don't toggle
+    if (txt->command) {
+        auto result = *txt->command;
+        txt->command.reset();
+        vis->handleCommand(result);
     }
 }
 

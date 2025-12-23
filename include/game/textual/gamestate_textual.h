@@ -1,6 +1,8 @@
 #ifndef GAMESTATE_TEXTUAL_H
 #define GAMESTATE_TEXTUAL_H
 
+#include <optional>
+#include <string>
 #include <engine/gamestate.h>
 #include <engine/console_buffer.h>
 #include <game/game.h>
@@ -39,6 +41,10 @@ public:
     // wrapper for cbuff so that we can add lines from outside this gamestate (i.e. in gamestatemain)
     void addLine(const std::string& s, const sourceEnum& src);
 
+    // if we receive a command that we want to communicate to the visual game,
+    // we set this and catch it in handleEvent
+    std::optional<std::string> command;
+
 private:
     std::shared_ptr<TextRenderer> tRenderer;
     
@@ -60,7 +66,7 @@ private:
     void drawText();
     // wrapper for whatever controller class we want to create later.
     // for now it just quits out.
-    void handleCommand(const std::string& command);
+    void handleCommand(const std::string& c);
 };
 
 #endif

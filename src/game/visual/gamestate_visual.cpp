@@ -50,6 +50,17 @@ void GameStateVisual::handleEvent(const InputState& inputState) {
             ch->handleEvent(inputState);
             break;
     }
+}
+
+void GameStateVisual::update(unsigned int dt) {
+    switch (visMode) {
+        case (GameMode::Room):
+            room->update(dt);
+            break;
+        case (GameMode::Chess):
+            ch->update(dt);
+            break;
+    }
     // Handle switching context
     if (room->interaction) {
         auto result = *room->interaction;
@@ -60,16 +71,8 @@ void GameStateVisual::handleEvent(const InputState& inputState) {
         auto result = *ch->interaction;
         ch->interaction.reset();
         dialog = result.dialog;
-        visMode = GameMode::Room;
-    }
-}
-
-void GameStateVisual::update(unsigned int dt) {
-    switch (visMode) {
-        case (GameMode::Room):
-            return room->update(dt);
-        case (GameMode::Chess):
-            return ch->update(dt);
+        if (result.type != ChessEnding::ContinuePlaying)
+            visMode = GameMode::Room;
     }
 }
 
@@ -87,4 +90,14 @@ void GameStateVisual::onResize(int newWidth, int newHeight) {
     screenHeight = newHeight;
     ch->onResize(newWidth, newHeight);
     room->onResize(newWidth, newHeight);
+}
+
+void GameStateVisual::handleCommand(std::string command) {
+    switch (visMode) {
+        case (GameMode::Room):
+            LOG(Error) << "The room mode cannot handle any commands";
+            return;
+        case (GameMode::Chess):
+            return ch->handleCommand(command);
+    }
 }

@@ -3,6 +3,40 @@
 
 square bbToSq(U64 bb) { return (square)__builtin_ctzll(bb); }
 
+piece promoteToPiece(char input) {
+    switch (input) {
+    case 'N':
+        return knight;
+    case 'B':
+        return bishop;
+    case 'R':
+        return rook;
+    default:
+        return queen;
+    }
+}
+
+// assumes properly formatted
+Move stringToMove(std::string s) {
+    Move ret;
+    int sourceFile = ('h' - s[0]);
+    int sourceRank = (s[1] - '1');
+    ret.source_bb = (U64)1 << (sourceFile + 8 * sourceRank);
+    int destFile  = ('h' - s[2]);
+    int destRank  = (s[3] - '1');
+    ret.dest_bb = (U64)1 << (destFile + 8 * destRank);
+    ret.moved_piece  = rook; // TODO
+    ret.promote_to = (s.length() > 4 ? promoteToPiece(s[4]) : pawn);
+    return ret;
+}
+
+std::string moveToString(Move m) {
+    square sqrc = bbToSq(m.source_bb);
+    square dest = bbToSq(m.dest_bb);
+    std::string promote = (m.promote_to ? pieceStringMap[m.promote_to] : "");
+    return boardStringMap[sqrc] + boardStringMap[dest] + promote;
+}
+
 void BoardState::resetGame() {
 	for (int i = 0; i < 12; i++) {
         piece_bb[i] = (U64)0;
@@ -51,4 +85,22 @@ void BoardState::loadFromFen(std::string fen) {
         pos >>= 1;
     }
     return;
+}
+
+void BoardState::makeMove(Move m) {
+    // remove from source
+    auto rev = ~m.source_bb;
+    piece_bb[m.moved_piece + whose_turn] &= rev;
+    color_bb[whose_turn] &= rev;
+    all_bb &= rev;
+    // add to dest
+    if (m.promote_to) {
+        piece_bb[m.promote_to + whose_turn] |= m.dest_bb;
+    } else {
+        piece_bb[m.moved_piece + whose_turn] |= m.dest_bb;
+    }
+    color_bb[whose_turn] |= m.dest_bb;
+    all_bb |= m.dest_bb;
+
+    whose_turn = 1 - whose_turn;
 }

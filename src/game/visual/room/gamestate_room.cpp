@@ -46,7 +46,7 @@ void GameStateRoom::load() {
     tileMap->loadTileMap("assets/maps/intro.txt");
 
     // Load npcs
-    npcs.push_back(Npc(InteractionType::Chess, "It's PUZZLE TIME!\nSolve the puzzle with a move\nlike 'e2e4'.", 3, 3));
+    npcs.push_back(Npc(InteractionType::Chess, "It's PUZZLE TIME!\nSolve the puzzle with a\nmove, like 'e2e4'.", 3, 3));
     npcs.push_back(Npc(InteractionType::Talk, "Hmm? Me? I'm a gnome.", 9, 9));
     for (auto& c : npcs) {
         auto [x, y] = c.getPos();
