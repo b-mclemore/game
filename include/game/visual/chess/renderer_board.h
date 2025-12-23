@@ -14,7 +14,28 @@ public:
 	};
     
 	void drawPiece(U64 pos, int pc_idx, int bottomX, int bottomY);
-    void drawBoard(const BoardState& bs, int centerX, int centerY);
+
+    // Draw board with optional success square (green square under piece)
+    void drawBoard(const BoardState& bs, int centerX, int centerY, bool showSuccess, U64 successSquare);
+
+    // Get screen position for a square given by bitboard
+    Vector2 getSquareScreenPos(U64 square_bb, int boardCenterX, int boardCenterY);
+
+    // Draw a specific piece type at arbitrary screen position
+    void drawPieceAt(int pc_idx, Vector2 screenPos);
+
+    // Draw board with animated piece (handles both correct and incorrect moves)
+    void drawBoardWithAnimation(
+        const BoardState& bs,
+        int centerX, int centerY,
+        bool isAnimating,
+        int animPieceIdx,
+        U64 sourceSquare,
+        Vector2 animFrom,
+        Vector2 animTo,
+        float animProgress,
+        bool isMoveCorrect
+    );
 
     // setter for renderGlyphDims
     void setBoardSize(int size);

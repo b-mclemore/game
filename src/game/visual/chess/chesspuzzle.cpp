@@ -40,3 +40,8 @@ void ChessPuzzle::loadFromFile(std::string path) {
     // load correct moves into memory
 	loadMoves(moves);
 }
+
+void ChessPuzzle::makeMove(Move m) {
+    bbs.makeMove(m);
+    currMoveIdx++;
+}

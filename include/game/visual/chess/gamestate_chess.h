@@ -65,6 +65,32 @@ private:
 
     // puzzle logic/state
     ChessPuzzle chuzz;
+
+    // Animation state
+    bool isAnimating = false;
+    float animProgress = 0.0f;           // [0, 1] animation progress
+    Vector2 animFrom;                     // Source position in screen coordinates
+    Vector2 animTo;                       // Destination position in screen coordinates
+    Move currentMove;                     // The move being animated
+    int animPieceIdx;                     // Which piece type (0-11) is animating
+    bool isMoveCorrect = false;          // True if move matches solution
+
+    // Effect state
+    bool isShaking = false;
+    float shakeProgress = 0.0f;
+    bool showSuccessSquare = false;
+    U64 successSquare = 0;
+    float successDelayProgress = 0.0f;
+    bool waitingForSuccessDelay = false;
+
+    // Animation timing constants
+    static constexpr float CHESS_MOVE_DELAY = 300.0f;  // milliseconds
+    static constexpr float SHAKE_DURATION = 200.0f;    // milliseconds
+    static constexpr float SUCCESS_DELAY = 500.0f;     // milliseconds to show success before ending
+
+    // Placeholder animation triggers
+    void triggerScreenShake();
+    void triggerSuccessEffect();
 };
 
 #endif

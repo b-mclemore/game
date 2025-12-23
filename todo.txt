@@ -35,7 +35,13 @@ roadmap
 [X] add movelist
 [X] add console interaction
 [X] handle correct/incorrect moves
-[ ] add move animation (skip handleInput while animating)
+[X] add move animation (skip handleInput while animating)
+[X] extra animation for success/fail
+[ ] abstract out drawing the board
+[ ] rm duplicate code from chesspuzzle/bitboard/renderer/etc
+[ ] generate legal moves to prevent animating illegal moves
+
+[ ] start 3d solid rendering
 
 [X] animate character moving
 [X] fix collision (maybe have a list or a second map)

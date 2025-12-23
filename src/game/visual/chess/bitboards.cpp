@@ -90,14 +90,14 @@ void BoardState::loadFromFen(std::string fen) {
 void BoardState::makeMove(Move m) {
     // remove from source
     auto rev = ~m.source_bb;
-    piece_bb[m.moved_piece + whose_turn] &= rev;
+    piece_bb[2 * m.moved_piece + whose_turn] &= rev;
     color_bb[whose_turn] &= rev;
     all_bb &= rev;
     // add to dest
     if (m.promote_to) {
-        piece_bb[m.promote_to + whose_turn] |= m.dest_bb;
+        piece_bb[2 * m.promote_to + whose_turn] |= m.dest_bb;
     } else {
-        piece_bb[m.moved_piece + whose_turn] |= m.dest_bb;
+        piece_bb[2 * m.moved_piece + whose_turn] |= m.dest_bb;
     }
     color_bb[whose_turn] |= m.dest_bb;
     all_bb |= m.dest_bb;

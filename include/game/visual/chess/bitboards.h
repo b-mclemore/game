@@ -84,7 +84,7 @@ private:
 	U64 piece_bb[12];     // The pairs of boards for each piece
     U64 color_bb[2];      // The pair of color boards
     U64 all_bb;           // The board for all pieces
-    int whose_turn;       // 0 = white, 1 = black
+    int whose_turn = 0;       // 0 = white, 1 = black
     int castling;         // (0b0000 or nonzero, in order WKQWbkbq)
     U64 en_passant;       // If last move was double pawn push, keep track of
                           // en-passant
